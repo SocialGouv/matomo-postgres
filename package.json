@@ -1,0 +1,16 @@
+{
+  "name": "matomo-metabase",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./index.js"
+  },
+  "prettier": {
+    "printWidth": 120
+  },
+  "dependencies": {
+    "pg": "^8.6.0",
+    "piwik-client": "^0.2.2"
+  }
+}
