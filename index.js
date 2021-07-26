@@ -1,9 +1,16 @@
 const PiwikClient = require("piwik-client");
 const { Client } = require("pg");
 
+const START_DATE = process.env.START_DATE || "2021-06-01";
+const DESTINATION_TABLE = process.env.DESTINATION_TABLE || "matomo";
+const MATOMO_KEY = process.env.MATOMO_KEY;
+const MATOMO_SITEID = process.env.MATOMO_SITEID;
+const MATOMO_URL = process.env.MATOMO_URL || "https://matomo.fabrique.social.gouv.fr/";
+
 const RESULTPERPAGE = 20000;
 
-const startDate = new Date("2021-06-01");
+const startDate = new Date(START_DATE);
+const connectionString = process.env.PGDATABASE;
 
 function getDaysArray(s, e) {
   for (var a = [], d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
@@ -18,18 +25,12 @@ function getPreviousDate(days) {
   return d;
 }
 
-const connectionString = process.env.PGURL;
-
-const MATOMO_MSP_KEY = process.env.MATOMO_MSP_KEY;
-const MATOMO_MSP_SITEID = process.env.MATOMO_MSP_SITEID;
-const MSP_TABLE = "msp"
-
 (async () => {
   const client = new Client({ connectionString });
   await client.connect();
   console.log("START");
 
-  const m = new Matomo("https://matomo.fabrique.social.gouv.fr/", MATOMO_MSP_KEY, MATOMO_MSP_SITEID);
+  const m = new Matomo(MATOMO_URL, MATOMO_KEY, MATOMO_SITEID);
 
   const dates = getDaysArray(new Date(startDate), new Date());
   dates.pop();
@@ -48,9 +49,10 @@ const MSP_TABLE = "msp"
     const events = getEvents(visits[0]);
     const event = events[0];
     const lastEvent = (
-      await client.query(`select * from ${MSP_TABLE} where action_id=$1 order by action_timestamp desc limit 1`, [
-        event.action_id,
-      ])
+      await client.query(
+        `select * from ${DESTINATION_TABLE} where action_id=$1 order by action_timestamp desc limit 1`,
+        [event.action_id]
+      )
     ).rows[0];
     currentIndex = o;
     if (!lastEvent) break;
@@ -78,9 +80,10 @@ const MSP_TABLE = "msp"
         try {
           const event = events[j];
           const lastEvent = (
-            await client.query(`select * from ${MSP_TABLE} where action_id=$1 order by action_timestamp desc limit 1`, [
-              event.action_id,
-            ])
+            await client.query(
+              `select * from ${DESTINATION_TABLE} where action_id=$1 order by action_timestamp desc limit 1`,
+              [event.action_id]
+            )
           ).rows[0];
           if (lastEvent) {
             console.log(`SKIP ${event.action_id} ${dates[o]} (${i}/${visits.length})`);
@@ -89,7 +92,7 @@ const MSP_TABLE = "msp"
 
           console.log(`DOING ${event.action_id} (${i}/${visits.length})`);
 
-          const text = `insert into ${MSP_TABLE} 
+          const text = `insert into ${DESTINATION_TABLE}
         (idSite, idVisit, actions, country, region, city, operatingSystemName, deviceModel, deviceBrand, visitDuration, daysSinceFirstVisit, visitorType, siteName, userId, serverDatePrettyFirstAction, action_id, action_type, action_eventCategory, action_eventAction, action_eventName, action_eventValue,action_timeSpent, action_timestamp, userCustomProperties)
         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)`;
 
