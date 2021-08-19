@@ -1,19 +1,26 @@
-require("dotenv").config();
+require("dotenv").config({ path: "./.env.msp" });
+
 const PiwikClient = require("piwik-client");
 const { Client } = require("pg");
 
 const MATOMO_KEY = process.env.MATOMO_KEY || "";
-const DEFAULTSTARTDATE = "2020-01-01";
 const MATOMO_URL = process.env.MATOMO_URL || "https://matomo.fabrique.social.gouv.fr/";
-const RESULTPERPAGE = 20000;
-const connectionString = process.env.PGDATABASE || "";
+const MATOMO_SITE = process.env.MATOMO_SITE || 37;
+const PROJECT_NAME = process.env.PROJECT_NAME || "";
+const PGDATABASE = process.env.PGDATABASE || "";
 
-const client = new Client({ connectionString });
+const DEFAULTSTARTDATE = "2020-01-01";
+const RESULTPERPAGE = 20000;
+
+const client = new Client({ connectionString: PGDATABASE });
 
 (async () => {
+  if (!PROJECT_NAME) return console.error("Missing env PROJECT_NAME");
+  if (!MATOMO_SITE) return console.error("Missing env MATOMO_SITE");
+  if (!MATOMO_KEY) return console.error("Missing env MATOMO_KEY");
+  if (!PGDATABASE) return console.error("Missing env PGDATABASE");
   await client.connect();
-  await run(37, "msp");
-  await run(22, "oz");
+  await run();
 })();
 
 function getDaysArray(s, e) {
@@ -23,12 +30,12 @@ function getDaysArray(s, e) {
   return a;
 }
 
-async function run(siteId, project) {
-  const m = new Matomo(MATOMO_URL, MATOMO_KEY, siteId);
+async function run() {
+  const m = new Matomo(MATOMO_URL, MATOMO_KEY, MATOMO_SITE);
 
-  await createTable(project);
+  await createTable(PROJECT_NAME);
 
-  const arr = (await client.query(`SELECT * FROM ${project} ORDER BY action_timestamp DESC  LIMIT 1;`)).rows;
+  const arr = (await client.query(`SELECT * FROM ${PROJECT_NAME} ORDER BY action_timestamp DESC  LIMIT 1;`)).rows;
 
   let startDate = arr.length ? new Date(arr[0].action_timestamp) : new Date(DEFAULTSTARTDATE);
   startDate.setDate(startDate.getDate() - 3); // We remove 3 days, to be sure
@@ -52,7 +59,7 @@ async function run(siteId, project) {
     const events = getEvents(visits[0]);
     const event = events[0];
     const lastEvent = (
-      await client.query(`select * from ${project} where action_id=$1 order by action_timestamp desc limit 1`, [
+      await client.query(`select * from ${PROJECT_NAME} where action_id=$1 order by action_timestamp desc limit 1`, [
         event.action_id,
       ])
     ).rows[0];
@@ -82,9 +89,10 @@ async function run(siteId, project) {
         try {
           const event = events[j];
           const lastEvent = (
-            await client.query(`select * from ${project} where action_id=$1 order by action_timestamp desc limit 1`, [
-              event.action_id,
-            ])
+            await client.query(
+              `select * from ${PROJECT_NAME} where action_id=$1 order by action_timestamp desc limit 1`,
+              [event.action_id]
+            )
           ).rows[0];
           if (lastEvent) {
             console.log(`SKIP ${event.action_id} ${dates[o]} (${i}/${visits.length})`);
@@ -93,7 +101,7 @@ async function run(siteId, project) {
 
           console.log(`DOING ${event.action_id} (${i}/${visits.length})`);
 
-          const text = `insert into ${project}
+          const text = `insert into ${PROJECT_NAME}
         (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_eventcategory, action_eventaction, action_eventname, action_eventvalue,action_timespent, action_timestamp, usercustomproperties)
         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)`;
 
@@ -105,6 +113,8 @@ async function run(siteId, project) {
       }
     }
   }
+
+  console.log("END", PROJECT_NAME);
 }
 
 function getEvents(visit) {
