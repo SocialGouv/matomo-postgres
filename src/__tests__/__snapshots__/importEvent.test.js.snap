@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`importEvent: should extract events from matomo visit actionsDetails and create insert queries 1`] = `
+Array [
+  Object {
+    "action_eventaction": "Cart change",
+    "action_eventcategory": "Ecommerce",
+    "action_eventname": "added - Basic Wetsuit",
+    "action_eventvalue": 1,
+    "action_id": "124_0",
+    "action_timespent": 48,
+    "action_timestamp": "2021-08-20T21:35:18.000Z",
+    "action_type": "event",
+    "actions": "2",
+    "city": "Buenos Aires",
+    "country": "Argentine",
+    "dayssincefirstvisit": "23",
+    "devicebrand": "Inconnu",
+    "devicemodel": "Générique Bureau",
+    "idsite": "42",
+    "idvisit": "124",
+    "operatingsystemname": "Mac",
+    "region": "Buenos Aires",
+    "serverdateprettyfirstaction": "2021-08-20T21:55:12.000Z",
+    "sitename": "tests",
+    "usercustomproperties": Object {
+      "page-author": "Julien",
+      "post-age": "-430 days",
+    },
+    "userid": "24",
+    "visitduration": "300",
+    "visitortype": "returningCustomer",
+  },
+  Object {
+    "action_eventaction": undefined,
+    "action_eventcategory": undefined,
+    "action_eventname": undefined,
+    "action_eventvalue": undefined,
+    "action_id": "124_1",
+    "action_timespent": "2",
+    "action_timestamp": "2021-08-20T21:30:25.000Z",
+    "action_type": "action",
+    "actions": "2",
+    "city": "Buenos Aires",
+    "country": "Argentine",
+    "dayssincefirstvisit": "23",
+    "devicebrand": "Inconnu",
+    "devicemodel": "Générique Bureau",
+    "idsite": "42",
+    "idvisit": "124",
+    "operatingsystemname": "Mac",
+    "region": "Buenos Aires",
+    "serverdateprettyfirstaction": "2021-08-20T21:55:12.000Z",
+    "sitename": "tests",
+    "usercustomproperties": Object {},
+    "userid": "24",
+    "visitduration": "300",
+    "visitortype": "returningCustomer",
+  },
+]
+`;
+
+exports[`importEvent: should extract events from matomo visit actionsDetails and create insert queries 2`] = `
+Array [
+  Array [
+    "insert into matomo
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, usercustomproperties)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+        ON CONFLICT DO NOTHING",
+    Array [
+      "42",
+      "124",
+      "2",
+      "Argentine",
+      "Buenos Aires",
+      "Buenos Aires",
+      "Mac",
+      "Générique Bureau",
+      "Inconnu",
+      "300",
+      "23",
+      "returningCustomer",
+      "tests",
+      "24",
+      "2021-08-20T21:55:12.000Z",
+      "124_0",
+      "event",
+      "Ecommerce",
+      "Cart change",
+      "added - Basic Wetsuit",
+      1,
+      48,
+      "2021-08-20T21:35:18.000Z",
+      Object {
+        "page-author": "Julien",
+        "post-age": "-430 days",
+      },
+    ],
+  ],
+  Array [
+    "insert into matomo
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, usercustomproperties)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
+        ON CONFLICT DO NOTHING",
+    Array [
+      "42",
+      "124",
+      "2",
+      "Argentine",
+      "Buenos Aires",
+      "Buenos Aires",
+      "Mac",
+      "Générique Bureau",
+      "Inconnu",
+      "300",
+      "23",
+      "returningCustomer",
+      "tests",
+      "24",
+      "2021-08-20T21:55:12.000Z",
+      "124_1",
+      "action",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "2",
+      "2021-08-20T21:30:25.000Z",
+      Object {},
+    ],
+  ],
+]
+`;
