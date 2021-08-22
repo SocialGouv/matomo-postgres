@@ -6,11 +6,12 @@ const { Client } = require("pg");
 const MATOMO_KEY = process.env.MATOMO_KEY || "";
 const MATOMO_URL = process.env.MATOMO_URL || "https://matomo.fabrique.social.gouv.fr/";
 const MATOMO_SITE = process.env.MATOMO_SITE || 37;
+
 const PROJECT_NAME = process.env.PROJECT_NAME || "";
 const PGDATABASE = process.env.PGDATABASE || "";
 
-const DEFAULTSTARTDATE = "2020-01-01";
-const RESULTPERPAGE = 20000;
+const DEFAULTSTARTDATE = process.env.STARTDATE || "2020-01-01"; // Start date when you think started to collect data in matomo
+const RESULTPERPAGE = process.env.RESULTPERPAGE || 20000; // You may need to increase this for high traffic website
 
 const client = new Client({ connectionString: PGDATABASE });
 
