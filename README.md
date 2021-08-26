@@ -19,7 +19,7 @@ npx @socialgouv/matomo-metabase [YYYY-MM-DD]
 | MATOMO_URL\*      | matomo url                                     |
 | PGDATABASE\*      | Postgres connection string                     |
 | DESTINATION_TABLE | `matomo`                                       |
-| STARTDATE         | `2020-01-01`                                   |
+| STARTDATE         | default to today()                             |
 | RESULTPERPAGE     | matomo pagination : `100`                      |
 | OFFSET            | default days to check in the past; default = 3 |
 

@@ -76,7 +76,7 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
   // serial-import events into PG
   const importedEvents = await pAll(
     allEvents.map((event) => () => importEvent(client, event)),
-    { concurrency: 1, stopOnError: true }
+    { concurrency: 10, stopOnError: true }
   );
 
   // continue to next page if necessary

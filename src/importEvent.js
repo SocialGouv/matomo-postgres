@@ -67,6 +67,7 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
     }
 
     /** @type {import("types").Event} */
+    // @ts-ignore
     const event = {
       // default matomo visit properties
       ...matomoProps.reduce((a, prop) => ({ ...a, [prop.toLowerCase()]: matomoVisit[prop] }), {}),
