@@ -5,11 +5,7 @@ const pAll = require("p-all");
 const PiwikClient = require("piwik-client");
 const { Client } = require("pg");
 
-const MATOMO_KEY = process.env.MATOMO_KEY || "";
-const MATOMO_URL = process.env.MATOMO_URL || "https://matomo.fabrique.social.gouv.fr/";
-const MATOMO_SITE = process.env.MATOMO_SITE || 0;
-const PGDATABASE = process.env.PGDATABASE || "";
-const OFFSET = process.env.OFFSET || "3";
+const { MATOMO_KEY, MATOMO_URL, MATOMO_SITE, PGDATABASE, DESTINATION_TABLE, OFFSET } = require("./config");
 
 const { createTable } = require("./createTable");
 const { importDate } = require("./importDate");
@@ -37,13 +33,18 @@ async function run(date) {
   // priority:
   //  - optional parameter date
   //  - optional env.STARTDATE
+  //  - last event in the table
   //  - today
 
-  const DEFAULTSTARTDATE = process.env.STARTDATE; // Start date when you think started to collect data in matomo
-  const referenceDate = date ? new Date(date) : DEFAULTSTARTDATE ? new Date(DEFAULTSTARTDATE) : new Date();
+  let referenceDate;
+  if (!referenceDate && date) referenceDate = new Date(date);
+  if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
+  if (!referenceDate) referenceDate = await findLastEventInMatomo(client);
+  if (!referenceDate) referenceDate = new Date();
 
-  // select a J-3 range from reference date
-  const dates = getDaysArray(referenceDate, parseInt(OFFSET));
+  console.log("START", referenceDate);
+  const offset = getDaysBetween(referenceDate, new Date());
+  const dates = getDaysArray(new Date(), offset);
 
   // for each date, serial-import data
   const res = await pAll(
@@ -66,4 +67,20 @@ if (require.main === module) {
     await run();
     console.log("run finished");
   })();
+}
+
+function getDaysBetween(startDate, endDate) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffTime = Math.abs(+end - +start);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+async function findLastEventInMatomo(client) {
+  const a = await client.query(`select * from ${DESTINATION_TABLE} order by action_timestamp desc limit 1`);
+  if (!a.rows.length || !a.rows[0].action_timestamp) return null;
+  const d = new Date(a.rows[0].action_timestamp);
+  d.setDate(d.getDate() - +OFFSET);
+  return d;
 }

@@ -1,6 +1,6 @@
 const { Client } = require("pg");
 
-const DESTINATION_TABLE = process.env.DESTINATION_TABLE || "matomo";
+const { DESTINATION_TABLE } = require("./config");
 
 /**
  *
@@ -10,7 +10,6 @@ const DESTINATION_TABLE = process.env.DESTINATION_TABLE || "matomo";
  * @return {Promise<Record<"rows", any[]>>}
  */
 const importEvent = async (client, event) => {
-  //console.log("importEvent", event);
   const eventKeys = Object.keys(event);
   const text = `insert into ${client.escapeIdentifier(DESTINATION_TABLE)}
         (${eventKeys.join(", ")})

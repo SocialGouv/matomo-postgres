@@ -3,9 +3,7 @@ const pAll = require("p-all");
 
 const { importEvent, getEventsFromMatomoVisit } = require("./importEvent");
 
-const MATOMO_SITE = process.env.MATOMO_SITE || 0;
-const DESTINATION_TABLE = process.env.DESTINATION_TABLE || "matomo";
-const RESULTPERPAGE = process.env.RESULTPERPAGE || "500";
+const { RESULTPERPAGE, MATOMO_SITE, DESTINATION_TABLE } = require("./config");
 
 /**
  * check count if imported rows for given date
@@ -43,6 +41,7 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
   } else {
     console.info(`${shortStamp(minTimestamp)}: load ${limit} more visits after ${offset}`);
   }
+
   // fetch visits details
   const visits = await new Promise((resolve) =>
     piwikApi(
@@ -75,7 +74,9 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
 
   // serial-import events into PG
   const importedEvents = await pAll(
-    allEvents.map((event) => () => importEvent(client, event)),
+    allEvents.map((event) => () => {
+      importEvent(client, event);
+    }),
     { concurrency: 10, stopOnError: true }
   );
 
@@ -86,6 +87,7 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
     return [...importedEvents, ...(nextEvents || [])];
   }
 
+  console.log("END");
   return importedEvents || [];
 };
 
