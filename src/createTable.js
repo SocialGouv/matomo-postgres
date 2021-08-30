@@ -1,7 +1,6 @@
 const { Client } = require("pg");
 
-const DESTINATION_TABLE = process.env.DESTINATION_TABLE || "matomo";
-
+const { DESTINATION_TABLE } = require("./config");
 /**
  *
  * @param {Client} client

@@ -1,5 +1,3 @@
-require("dotenv").config({ path: "./.env.msp" });
-
 const pAll = require("p-all");
 
 const PiwikClient = require("piwik-client");
