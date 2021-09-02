@@ -26,8 +26,8 @@ async function run(date) {
 
   // priority:
   //  - optional parameter date
-  //  - optional env.STARTDATE
   //  - last event in the table
+  //  - optional env.STARTDATE
   //  - today
 
   let referenceDate;
