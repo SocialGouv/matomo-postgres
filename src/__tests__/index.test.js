@@ -1,5 +1,9 @@
 const mock_pgQuery = jest.fn();
 const mock_matomoApi = jest.fn();
+const formatISO = require("date-fns/formatISO");
+const addDays = require("date-fns/addDays");
+
+const { OFFSET } = require("../config");
 
 process.env.MATOMO_SITE = "42";
 process.env.PROJECT_NAME = "some-project";
@@ -7,6 +11,11 @@ process.env.PROJECT_NAME = "some-project";
 const matomoVisit = require("./visit.json");
 
 const run = require("../index");
+
+const TEST_DATE = new Date(new Date().getTime()); // 5 days
+
+// @ts-ignore
+const isoDate = (date) => formatISO(date, { representation: "date" });
 
 jest.mock("pg", () => {
   class Client {
@@ -39,10 +48,11 @@ beforeEach(() => {
   jest.resetAllMocks();
   jest.resetModules();
   process.env.STARTDATE = "";
+  //process.env.OFFSET = "";
 });
 
 test("run: should create table", async () => {
-  mock_pgQuery.mockReturnValue({ rows: [{ action_timestamp: new Date("2020-01-01T00:00:00.000Z").getTime() }] });
+  mock_pgQuery.mockReturnValue({ rows: [] });
   mock_matomoApi.mockImplementation((options, cb) => {
     return cb(null, []);
   });
@@ -50,10 +60,9 @@ test("run: should create table", async () => {
   expect(mock_pgQuery.mock.calls[0]).toMatchSnapshot();
 });
 
-test("run: should get the smart date base on the last event", async () => {
-  jest.useFakeTimers("modern").setSystemTime(new Date("2021-08-01T00:00:00.000Z").getTime());
-  mock_pgQuery.mockReturnValueOnce({ rows: [] });
-  mock_pgQuery.mockReturnValue({ rows: [{ count: 0 }] });
+test("run: should fetch the latest event date if no date provided", async () => {
+  jest.useFakeTimers("modern").setSystemTime(TEST_DATE.getTime());
+  mock_pgQuery.mockReturnValue({ rows: [] });
 
   mock_matomoApi.mockImplementation((options, cb) => {
     return cb(null, [
@@ -70,56 +79,56 @@ test("run: should get the smart date base on the last event", async () => {
 
   await run();
 
-  const expectedDbCalls = [
-    [
-      "CREATE TABLE IF NOT EXISTS matomo\n" +
-        "  (\n" +
-        "    idsite                      text,\n" +
-        "    idvisit                     text,\n" +
-        "    actions                     text,\n" +
-        "    country                     text,\n" +
-        "    region                      text,\n" +
-        "    city                        text,\n" +
-        "    operatingsystemname         text,\n" +
-        "    devicemodel                 text,\n" +
-        "    devicebrand                 text,\n" +
-        "    visitduration               text,\n" +
-        "    dayssincefirstvisit         text,\n" +
-        "    visitortype                 text,\n" +
-        "    sitename                    text,\n" +
-        "    userid                      text,\n" +
-        "    serverdateprettyfirstaction date,\n" +
-        "    action_id                   text UNIQUE,\n" +
-        "    action_type                 text,\n" +
-        "    action_eventcategory        text,\n" +
-        "    action_eventaction          text,\n" +
-        "    action_eventname            text,\n" +
-        "    action_eventvalue           text,\n" +
-        "    action_timespent            text,\n" +
-        "    action_timestamp            timestamp with time zone,\n" +
-        "    usercustomproperties        json\n" +
-        ")",
-      [],
-    ],
-    ["select * from matomo order by action_timestamp desc limit 1"],
-  ];
-
   // check matomo requests
-  expect(mock_matomoApi.mock.calls.length).toEqual(0);
+  expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
+  expect(mock_matomoApi.mock.calls[0][0].filter_offset).toEqual(0);
 
-  // check db requests
-  expect(mock_pgQuery.mock.calls.length).toEqual(expectedDbCalls.length);
-
-  // // check matomo requests
-  // expect(mock_matomoApi.mock.calls.length).toEqual(expectedMatomoCalls.length);
-  // expect(mock_matomoApi.mock.calls.map((c) => [c[0].date, c[0].idSite])).toEqual(expectedMatomoCalls);
-  // // check the 4 events inserted
-  // expect(mock_pgQuery.mock.calls.length).toEqual(1 + expectedMatomoCalls.length * (4 + 1));
-  // expect(mock_pgQuery.mock.calls).toMatchSnapshot();
+  // check db queries
+  expect(mock_pgQuery.mock.calls[1][0]).toEqual(
+    "select action_timestamp from matomo order by action_timestamp desc limit 1"
+  ); // call 0 is create table
 });
 
-test("run: should use now if nothing in DB", async () => {
-  jest.useFakeTimers("modern").setSystemTime(new Date("2020-01-01").getTime());
+test("run: should resume using latest event date - offset if no date provided", async () => {
+  jest.useFakeTimers("modern").setSystemTime(TEST_DATE.getTime());
+
+  const LAST_EVENT_DATE_OFFSET = 2;
+  // @ts-ignore
+  const LAST_EVENT_DATE = addDays(TEST_DATE, -LAST_EVENT_DATE_OFFSET);
+
+  mock_pgQuery.mockReturnValue({ rows: [{ action_timestamp: LAST_EVENT_DATE.getTime() }] });
+
+  mock_matomoApi.mockImplementation((options, cb) => {
+    return cb(null, [
+      {
+        ...matomoVisit,
+        idVisit: 123,
+      },
+      {
+        ...matomoVisit,
+        idVisit: 124,
+      },
+    ]);
+  });
+
+  await run();
+
+  // check matomo requests
+  expect(mock_matomoApi.mock.calls[0][0].date).toEqual(
+    // @ts-ignore
+    isoDate(addDays(LAST_EVENT_DATE, -parseInt(OFFSET)))
+  );
+  expect(mock_matomoApi.mock.calls[0][0].filter_offset).toEqual(0);
+
+  const daysCount = LAST_EVENT_DATE_OFFSET + parseInt(OFFSET) + 1;
+  expect(mock_matomoApi.mock.calls.length).toEqual(daysCount);
+
+  // check db queries
+  expect(mock_pgQuery.mock.calls.length).toEqual(2 + daysCount * 5); // create + select queries + days offset
+});
+
+test("run: should use today date if nothing in DB", async () => {
+  jest.useFakeTimers("modern").setSystemTime(TEST_DATE.getTime());
   mock_pgQuery.mockReturnValue({ rows: [] });
 
   mock_matomoApi.mockImplementation((options, cb) => {
@@ -133,26 +142,17 @@ test("run: should use now if nothing in DB", async () => {
 
   await run();
 
-  expect(mock_matomoApi.mock.calls.length).toEqual(0);
-  expect(mock_pgQuery.mock.calls.length).toEqual(2);
+  // check matomo requests
+  expect(mock_matomoApi.mock.calls.length).toEqual(1);
+  expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
 
-
-  // const expectedMatomoCalls = [
-  //   ["2019-12-29", "42"],
-  //   ["2019-12-30", "42"],
-  //   ["2019-12-31", "42"],
-  // ];
-
-  // // check matomo requests
-  // expect(mock_matomoApi.mock.calls.length).toEqual(expectedMatomoCalls.length);
-  // expect(mock_matomoApi.mock.calls.map((c) => [c[0].date, c[0].idSite])).toEqual(expectedMatomoCalls);
-  // // check the 4 events inserted
-  // expect(mock_pgQuery.mock.calls.length).toEqual(1 + expectedMatomoCalls.length * (2 + 1));
-  // expect(mock_pgQuery.mock.calls).toMatchSnapshot();
+  // check the 4 events inserted
+  expect(mock_pgQuery.mock.calls.length).toEqual(2 + 3); // create, check date, latest + 2 inserts
+  expect(mock_pgQuery.mock.calls).toMatchSnapshot();
 });
 
 test("run: should use given date if any", async () => {
-  jest.useFakeTimers("modern").setSystemTime(new Date("2020-01-01").getTime());
+  jest.useFakeTimers("modern").setSystemTime(TEST_DATE.getTime());
   mock_pgQuery.mockReturnValue({ rows: [] });
 
   mock_matomoApi.mockImplementation((options, cb) => {
@@ -164,28 +164,17 @@ test("run: should use given date if any", async () => {
     ]);
   });
 
-  await run("2019-07-01");
+  // @ts-ignore
+  await run(isoDate(addDays(TEST_DATE, -10)) + "T00:00:00.000Z");
 
-
-  expect(mock_matomoApi.mock.calls.length).toEqual(184);
-
-  // const expectedMatomoCalls = [
-  //   ["2019-06-28", "42"],
-  //   ["2019-06-29", "42"],
-  //   ["2019-06-30", "42"],
-  // ];
-
-  // // check matomo requests
-  // expect(mock_matomoApi.mock.calls.length).toEqual(expectedMatomoCalls.length);
-  // expect(mock_matomoApi.mock.calls.map((c) => [c[0].date, c[0].idSite])).toEqual(expectedMatomoCalls);
-  // // check the 4 events inserted
-  // expect(mock_pgQuery.mock.calls.length).toEqual(1 + expectedMatomoCalls.length * (2 + 1));
-  // expect(mock_pgQuery.mock.calls).toMatchSnapshot();
+  expect(mock_matomoApi.mock.calls.length).toEqual(11);
+  expect(mock_pgQuery.mock.calls.length).toEqual(1 + 11 * 3); // create table + inserts. no initial select as date is provided
 });
 
 test("run: should use STARTDATE if any", async () => {
-  process.env.STARTDATE = "2019-07-15";
-  jest.useFakeTimers("modern").setSystemTime(new Date("2020-01-01").getTime());
+  // @ts-ignore
+  process.env.STARTDATE = isoDate(addDays(TEST_DATE, -5)) + "T00:00:00.000Z";
+  jest.useFakeTimers("modern").setSystemTime(TEST_DATE.getTime());
   mock_pgQuery.mockReturnValue({ rows: [] });
 
   mock_matomoApi.mockImplementation((options, cb) => {
@@ -199,18 +188,7 @@ test("run: should use STARTDATE if any", async () => {
 
   await run();
 
-  expect(mock_matomoApi.mock.calls.length).toEqual(170);
+  expect(mock_matomoApi.mock.calls.length).toEqual(6);
 
-  // const expectedMatomoCalls = [
-  //   ["2019-07-12", "42"],
-  //   ["2019-07-13", "42"],
-  //   ["2019-07-14", "42"],
-  // ];
-
-  // // check matomo requests
-  // expect(mock_matomoApi.mock.calls.length).toEqual(expectedMatomoCalls.length);
-  // expect(mock_matomoApi.mock.calls.map((c) => [c[0].date, c[0].idSite])).toEqual(expectedMatomoCalls);
-  // // check the 4 events inserted
-  // expect(mock_pgQuery.mock.calls.length).toEqual(1 + expectedMatomoCalls.length * (2 + 1));
-  // expect(mock_pgQuery.mock.calls).toMatchSnapshot();
+  expect(mock_pgQuery.mock.calls.length).toEqual(1 + 6 * 3); // create table + inserts. no initial select as date is provided
 });

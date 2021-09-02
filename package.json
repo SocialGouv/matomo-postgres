@@ -20,6 +20,8 @@
     "printWidth": 120
   },
   "dependencies": {
+    "date-fns": "^2.23.0",
+    "debug": "^4.3.2",
     "dotenv": "^10.0.0",
     "p-all": "^3.0.0",
     "pg": "^8.6.0",

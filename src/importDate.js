@@ -1,9 +1,21 @@
 const { Client } = require("pg");
 const pAll = require("p-all");
+const debug = require("debug")("importDate");
+const formatISO = require("date-fns/formatISO");
 
 const { importEvent, getEventsFromMatomoVisit } = require("./importEvent");
 
 const { RESULTPERPAGE, MATOMO_SITE, DESTINATION_TABLE } = require("./config");
+
+/**
+ * return date as ISO yyyy-mm-dd
+ *
+ * @param {Date} date date
+ *
+ * @returns {string}
+ */
+// @ts-ignore
+const isoDate = (date) => formatISO(date, { representation: "date" });
 
 /**
  * check count if imported rows for given date
@@ -16,12 +28,10 @@ const { RESULTPERPAGE, MATOMO_SITE, DESTINATION_TABLE } = require("./config");
 const getRecordsCount = async (client, date) => {
   const text = `SELECT COUNT(distinct idvisit) FROM ${client.escapeIdentifier(
     DESTINATION_TABLE
-  )} WHERE action_timestamp::date='${date.toISOString().substring(0, 10)}';`;
+  )} WHERE action_timestamp::date='${isoDate(date)}';`;
   const result = await client.query(text);
   return parseInt((result && result.rows && result.rows.length && result.rows[0].count) || 0);
 };
-
-const shortStamp = (stp) => new Date(stp).toISOString().substring(0, 10);
 
 /**
  * import all matomo data for a given date
@@ -33,22 +43,20 @@ const shortStamp = (stp) => new Date(stp).toISOString().substring(0, 10);
  * @returns {Promise<any[]>}
  */
 const importDate = async (client, piwikApi, date, filterOffset = 0) => {
-  const minTimestamp = date.getTime();
   const limit = parseInt(RESULTPERPAGE);
   const offset = filterOffset || (await getRecordsCount(client, date));
   if (!offset) {
-    console.info(`${shortStamp(minTimestamp)}: load ${limit} visits`);
+    debug(`${isoDate(date)}: load ${limit} visits`);
   } else {
-    console.info(`${shortStamp(minTimestamp)}: load ${limit} more visits after ${offset}`);
+    debug(`${isoDate(date)}: load ${limit} more visits after ${offset}`);
   }
-
   // fetch visits details
   const visits = await new Promise((resolve) =>
     piwikApi(
       {
         method: "Live.getLastVisitsDetails",
         period: "day",
-        date: new Date(minTimestamp).toISOString().substring(0, 10),
+        date: isoDate(date),
         filter_limit: limit,
         filter_offset: offset,
         filter_sort_order: "asc",
@@ -68,7 +76,7 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
   const allEvents = visits.flatMap(getEventsFromMatomoVisit);
 
   if (!allEvents.length) {
-    console.info(`no more valid events after ${new Date(minTimestamp).toISOString()}`);
+    debug(`no more valid events after ${isoDate(date)}`);
     return [];
   }
 
@@ -87,7 +95,8 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
     return [...importedEvents, ...(nextEvents || [])];
   }
 
-  console.log("END");
+  debug(`finished importing ${isoDate(date)}, offset ${offset}`);
+
   return importedEvents || [];
 };
 
