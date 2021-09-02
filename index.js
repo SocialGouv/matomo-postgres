@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "./.env.msp" });
+require("dotenv").config({ path: "./.env.oz" });
 
 const PiwikClient = require("piwik-client");
 const { Client } = require("pg");
