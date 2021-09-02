@@ -32,8 +32,8 @@ async function run(date) {
 
   let referenceDate;
   if (!referenceDate && date) referenceDate = new Date(date);
-  if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
   if (!referenceDate) referenceDate = await findLastEventInMatomo(client);
+  if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
   if (!referenceDate) referenceDate = new Date();
 
   // @ts-ignore
