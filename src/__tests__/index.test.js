@@ -12,7 +12,7 @@ const matomoVisit = require("./visit.json");
 
 const run = require("../index");
 
-const TEST_DATE = new Date(new Date().getTime()); // 5 days
+const TEST_DATE = new Date();
 
 // @ts-ignore
 const isoDate = (date) => formatISO(date, { representation: "date" });
@@ -144,11 +144,11 @@ test("run: should use today date if nothing in DB", async () => {
 
   // check matomo requests
   expect(mock_matomoApi.mock.calls.length).toEqual(1);
+  console.log(TEST_DATE, isoDate(TEST_DATE))
   expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
 
   // check the 4 events inserted
   expect(mock_pgQuery.mock.calls.length).toEqual(2 + 3); // create, check date, latest + 2 inserts
-  expect(mock_pgQuery.mock.calls).toMatchSnapshot();
 });
 
 test("run: should use given date if any", async () => {
@@ -190,5 +190,5 @@ test("run: should use STARTDATE if any", async () => {
 
   expect(mock_matomoApi.mock.calls.length).toEqual(6);
 
-  expect(mock_pgQuery.mock.calls.length).toEqual(1 + 6 * 3); // create table + inserts. no initial select as date is provided
+  expect(mock_pgQuery.mock.calls.length).toEqual(2 + 6 * 3); // create table + initial select + inserts. 
 });
