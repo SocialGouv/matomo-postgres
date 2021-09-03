@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`run: should create table 1`] = `
+Array [
+  "CREATE TABLE IF NOT EXISTS matomo
+  (
+    idsite                      text,
+    idvisit                     text,
+    actions                     text,
+    country                     text,
+    region                      text,
+    city                        text,
+    operatingsystemname         text,
+    devicemodel                 text,
+    devicebrand                 text,
+    visitduration               text,
+    dayssincefirstvisit         text,
+    visitortype                 text,
+    sitename                    text,
+    userid                      text,
+    serverdateprettyfirstaction date,
+    action_id                   text UNIQUE,
+    action_type                 text,
+    action_eventcategory        text,
+    action_eventaction          text,
+    action_eventname            text,
+    action_eventvalue           text,
+    action_timespent            text,
+    action_timestamp            timestamp with time zone,
+    usercustomproperties        json
+)",
+  Array [],
+]
+`;

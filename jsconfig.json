@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "checkJs": true,
+    "module": "commonjs",
+    "target": "es6"
+  },
+  "include": ["src/**/*", "types/*"]
+}
