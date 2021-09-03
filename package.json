@@ -1,16 +1,36 @@
 {
-  "name": "matomo-metabase",
+  "name": "@socialgouv/matomo-metabase",
+  "description": "Extract visitor events from Matomo API and push to Postgres",
   "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
+  "types": "types/index.d.ts",
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "preferGlobal": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "matomo-metabase": "./bin/index.js"
+  },
   "scripts": {
-    "start": "node ./index.js"
+    "start": "node ./src/index.js",
+    "test": "jest --verbose"
   },
   "prettier": {
     "printWidth": 120
   },
   "dependencies": {
+    "date-fns": "^2.23.0",
+    "debug": "^4.3.2",
+    "dotenv": "^10.0.0",
+    "p-all": "^3.0.0",
     "pg": "^8.6.0",
     "piwik-client": "^0.2.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@types/pg": "^8.6.1",
+    "jest": "^27.0.6",
+    "typescript": "^4.3.5"
   }
 }
