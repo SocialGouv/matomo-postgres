@@ -27,7 +27,7 @@ jest.mock("pg", () => {
       return Promise.resolve();
     }
     query(...args) {
-      return mock_pgQuery(...args);
+      return Promise.resolve(mock_pgQuery(...args));
     }
   }
   return {
@@ -144,7 +144,7 @@ test("run: should use today date if nothing in DB", async () => {
 
   // check matomo requests
   expect(mock_matomoApi.mock.calls.length).toEqual(1);
-  console.log(TEST_DATE, isoDate(TEST_DATE))
+  console.log(TEST_DATE, isoDate(TEST_DATE));
   expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
 
   // check the 4 events inserted
@@ -190,5 +190,5 @@ test("run: should use STARTDATE if any", async () => {
 
   expect(mock_matomoApi.mock.calls.length).toEqual(6);
 
-  expect(mock_pgQuery.mock.calls.length).toEqual(2 + 6 * 3); // create table + initial select + inserts. 
+  expect(mock_pgQuery.mock.calls.length).toEqual(2 + 6 * 3); // create table + initial select + inserts.
 });

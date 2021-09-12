@@ -9,12 +9,14 @@ test("importEvent: should extract events from matomo visit actionsDetails and cr
   const visits = getEventsFromMatomoVisit(matomoVisit);
   expect(visits).toMatchSnapshot();
   const spy = jest.fn();
+  spy.mockResolvedValue(Promise.resolve());
   const fakeClient = {
     escapeIdentifier(name) {
       return name;
     },
     query: spy,
   };
+  //@ts-expect-error
   visits.map((visit) => importEvent(fakeClient, visit));
   expect(spy.mock.calls).toMatchSnapshot();
 });

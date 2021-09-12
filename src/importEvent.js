@@ -9,15 +9,16 @@ const { DESTINATION_TABLE } = require("./config");
  *
  * @return {Promise<Record<"rows", any[]>>}
  */
-const importEvent = async (client, event) => {
+const importEvent = (client, event) => {
   const eventKeys = Object.keys(event);
   const text = `insert into ${client.escapeIdentifier(DESTINATION_TABLE)}
         (${eventKeys.join(", ")})
         values (${eventKeys.map((k, i) => `\$${i + 1}`).join(", ")})
         ON CONFLICT DO NOTHING`;
-
   const values = [...eventKeys.map((k) => event[k])];
-  return client.query(text, values);
+  return client.query(text, values).catch((e) => {
+    return { rows: [] };
+  });
 };
 
 const matomoProps = [

@@ -42,13 +42,16 @@ async function run(date) {
     end: new Date(),
   });
 
+  debug(`import : ${dates.join(", ")}`);
+
   // for each date, serial-import data
   const res = await pAll(
     dates.map((date) => () => importDate(client, piwik.api.bind(piwik), date)),
-    { concurrency: 1 }
+    { concurrency: 1, stopOnError: true }
   );
 
-  client.end();
+  await client.end();
+  debug("close");
 
   return res;
 }

@@ -61,6 +61,7 @@ test("importDate: should import all events for a given date", async () => {
     },
     query: pgSpy,
   };
+  //@ts-expect-error
   await importDate(fakeClient, matomoSpy, new Date("2021-08-02"));
   expect(matomoSpy.mock.calls.map((c) => c[0])).toMatchSnapshot();
   expect(pgSpy.mock.calls).toMatchSnapshot();
@@ -83,7 +84,7 @@ test("importDate: should import when new results", async () => {
       return name;
     },
   };
-
+  //@ts-expect-error
   const imported = await importDate(fakeClient, matomoSpy, new Date("2021-08-03T00:00:00"));
   expect(pgSpy.mock.calls.length).toEqual(3);
   expect(imported.length).toEqual(2);
@@ -107,7 +108,7 @@ test("importDate: should offset matomo calls when results already exist", async 
       return name;
     },
   };
-
+  //@ts-expect-error
   const imported = await importDate(fakeClient, matomoSpy, new Date("2021-08-03T00:00:00"));
   expect(pgSpy.mock.calls.length).toEqual(3);
   expect(imported.length).toEqual(2);
@@ -125,6 +126,7 @@ test("importDate: should NOT import when no matomo results", async () => {
       return name;
     },
   };
+  //@ts-expect-error
   const imported = await importDate(fakeClient, matomoSpy, new Date("2021-08-03"));
   expect(pgSpy.mock.calls.length).toEqual(1);
   expect(imported.length).toEqual(0);
