@@ -28,7 +28,7 @@
     "piwik-client": "^0.2.2"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
+    "@types/jest": "^27.0.2",
     "@types/pg": "^8.6.1",
     "jest": "^27.1.1",
     "typescript": "^4.4.3"
