@@ -38,6 +38,7 @@ const matomoProps = [
   "userId",
 ];
 
+/** @type Record<string, (a: import("types/matomo").ActionDetail) => string | number> */
 const actionProps = {
   action_type: (action) => action.type,
   action_eventcategory: (action) => action.eventCategory,
@@ -45,7 +46,8 @@ const actionProps = {
   action_eventname: (action) => action.eventName,
   action_eventvalue: (action) => action.eventValue,
   action_timespent: (action) => action.timeSpent,
-  action_timestamp: (action) => new Date(parseInt(action.timestamp) * 1000).toISOString(),
+  action_timestamp: (action) => new Date(action.timestamp * 1000).toISOString(),
+  action_url: (action) => action.url,
 };
 
 /**
@@ -66,6 +68,15 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
       usercustomproperties[property[`customVariableName${k}`]] = property[`customVariableValue${k}`];
     }
 
+    /** @type {Record<string, string>} */
+    const usercustomdimensions = {};
+    for (let k = 1; k < 10; k++) {
+      const dimension = `dimension${k}`;
+      const value = actionDetail[dimension] || matomoVisit[dimension];
+      if (!value) continue; // max 10 custom variables
+      usercustomdimensions[dimension] = value;
+    }
+
     /** @type {import("types").Event} */
     // @ts-ignore
     const event = {
@@ -78,6 +89,7 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
       }),
       // custom variables
       usercustomproperties,
+      usercustomdimensions,
     };
     return event;
   });

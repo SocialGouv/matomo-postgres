@@ -92,6 +92,10 @@ export type Visit = {
   plugins: string;
   pluginsIcons?: PluginsIcon[];
   dimension1?: string;
+  dimension2: string;
+  dimension3?: string;
+  dimension4?: string;
+  dimension5?: string;
   experiments: Experiment[];
   customVariables: any;
   formConversions: number;
@@ -120,7 +124,9 @@ export interface ActionDetail {
   icon: string;
   iconSVG?: string;
   timestamp: number;
+  dimension1?: string;
   dimension2?: string;
+  dimension3?: string;
   dimension4?: string;
   dimension5?: string;
   formName?: string;

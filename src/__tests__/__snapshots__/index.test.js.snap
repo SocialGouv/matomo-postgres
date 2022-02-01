@@ -28,6 +28,8 @@ Array [
     action_timespent            text,
     action_timestamp            timestamp with time zone,
     usercustomproperties        json
+    usercustomdimensions        json
+    action_url                  text
 )",
   Array [],
 ]

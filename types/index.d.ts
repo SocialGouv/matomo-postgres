@@ -24,5 +24,7 @@ export type Event = {
   action_eventvalue: string;
   action_timespent: string;
   action_timestamp: string;
+  action_url: string;
   usercustomproperties: Record<string, string>;
+  usercustomdimensions: Record<string, string>;
 };

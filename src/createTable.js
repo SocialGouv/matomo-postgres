@@ -31,9 +31,18 @@ async function createTable(client) {
     action_eventvalue           text,
     action_timespent            text,
     action_timestamp            timestamp with time zone,
-    usercustomproperties        json
+    usercustomproperties        json,
+    usercustomdimensions        json,
+    action_url                  text
 )`;
   await client.query(text, []);
+  const addUserCustomDimensionColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
+  ADD COLUMN IF NOT EXISTS "usercustomdimensions" json;`;
+  await client.query(addUserCustomDimensionColumn, []);
+
+  const addActionUrlColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
+  ADD COLUMN IF NOT EXISTS "action_url" json;`;
+  await client.query(addActionUrlColumn, []);
 }
 
 module.exports = { createTable };

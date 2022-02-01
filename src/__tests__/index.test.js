@@ -84,9 +84,13 @@ test("run: should fetch the latest event date if no date provided", async () => 
   expect(mock_matomoApi.mock.calls[0][0].filter_offset).toEqual(0);
 
   // check db queries
-  expect(mock_pgQuery.mock.calls[1][0]).toEqual(
+  expect(mock_pgQuery.mock.calls[3][0]).toEqual(
+    // call 0 is create table
+    // call 1 is add column usercustomdimension
+    // call 2 is add column action_url
+    //
     "select action_timestamp from matomo order by action_timestamp desc limit 1"
-  ); // call 0 is create table
+  );
 });
 
 test("run: should resume using latest event date - offset if no date provided", async () => {
@@ -124,7 +128,7 @@ test("run: should resume using latest event date - offset if no date provided", 
   expect(mock_matomoApi.mock.calls.length).toEqual(daysCount);
 
   // check db queries
-  expect(mock_pgQuery.mock.calls.length).toEqual(2 + daysCount * 5); // create + select queries + days offset
+  expect(mock_pgQuery.mock.calls.length).toEqual(4 + daysCount * 5); // create + alter + alter + select queries + days offset
 });
 
 test("run: should use today date if nothing in DB", async () => {
@@ -148,7 +152,7 @@ test("run: should use today date if nothing in DB", async () => {
   expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
 
   // check the 4 events inserted
-  expect(mock_pgQuery.mock.calls.length).toEqual(2 + 3); // create, check date, latest + 2 inserts
+  expect(mock_pgQuery.mock.calls.length).toEqual(4 + 3); // create, alter, alter, check date, latest + 2 inserts
 });
 
 test("run: should use given date if any", async () => {
@@ -168,7 +172,7 @@ test("run: should use given date if any", async () => {
   await run(isoDate(addDays(TEST_DATE, -10)) + "T00:00:00.000Z");
 
   expect(mock_matomoApi.mock.calls.length).toEqual(11);
-  expect(mock_pgQuery.mock.calls.length).toEqual(1 + 11 * 3); // create table + inserts. no initial select as date is provided
+  expect(mock_pgQuery.mock.calls.length).toEqual(3 + 11 * 3); // create table + alter + alter + inserts. no initial select as date is provided
 });
 
 test("run: should use STARTDATE if any", async () => {
@@ -190,5 +194,5 @@ test("run: should use STARTDATE if any", async () => {
 
   expect(mock_matomoApi.mock.calls.length).toEqual(6);
 
-  expect(mock_pgQuery.mock.calls.length).toEqual(2 + 6 * 3); // create table + initial select + inserts.
+  expect(mock_pgQuery.mock.calls.length).toEqual(4 + 6 * 3); // create table + alter + alter + initial select + inserts.
 });
