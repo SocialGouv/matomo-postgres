@@ -22,7 +22,7 @@
   "dependencies": {
     "date-fns": "^2.23.0",
     "debug": "^4.3.3",
-    "dotenv": "^10.0.0",
+    "dotenv": "^15.0.0",
     "p-all": "^3.0.0",
     "pg": "^8.7.1",
     "piwik-client": "^0.2.2"
