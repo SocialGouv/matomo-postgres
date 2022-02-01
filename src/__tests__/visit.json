@@ -13,6 +13,8 @@
   "userId": "24",
   "region": "Buenos Aires",
   "city": "Buenos Aires",
+  "dimension1": "guest",
+  "dimension3": "page",
   "firstActionTimestamp": 1629496512,
   "actionDetails": [
     {
@@ -34,9 +36,9 @@
       "subtitle": "Catégorie: \"Ecommerce', Action: \"Cart change\"",
       "eventName": "added - Basic Wetsuit",
       "eventValue": 1,
-      "dimension2": null,
-      "dimension4": null,
-      "dimension5": null,
+      "dimension2": "julien",
+      "dimension4": "indonesia",
+      "dimension5": "diving",
       "customVariables": {
         "1": {
           "customVariableName1": "page-author",
@@ -64,9 +66,9 @@
       "icon": "",
       "iconSVG": "plugins/Morpheus/images/action.svg",
       "timestamp": 1629495025,
-      "dimension2": null,
-      "dimension4": null,
-      "dimension5": null
+      "dimension2": "julien",
+      "dimension4": "indonesia",
+      "dimension5": "diving"
     }
   ]
 }
