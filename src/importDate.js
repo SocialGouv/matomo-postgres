@@ -72,6 +72,8 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
     )
   );
 
+  debug(`fetched ${visits.length} visits`);
+
   // flatten events
   const allEvents = visits.flatMap(getEventsFromMatomoVisit);
 
@@ -80,11 +82,11 @@ const importDate = async (client, piwikApi, date, filterOffset = 0) => {
     return [];
   }
 
+  debug(`import ${allEvents.length} events`);
+
   // serial-import events into PG
   const importedEvents = await pAll(
-    allEvents.map((event) => () => {
-      importEvent(client, event);
-    }),
+    allEvents.map((event) => () => importEvent(client, event)),
     { concurrency: 10, stopOnError: true }
   );
 
