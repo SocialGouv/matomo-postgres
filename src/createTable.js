@@ -41,7 +41,7 @@ async function createTable(client) {
   await client.query(addUserCustomDimensionColumn, []);
 
   const addActionUrlColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
-  ADD COLUMN IF NOT EXISTS "action_url" json;`;
+  ADD COLUMN IF NOT EXISTS "action_url" text;`;
   await client.query(addActionUrlColumn, []);
 }
 
