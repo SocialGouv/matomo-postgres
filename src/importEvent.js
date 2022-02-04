@@ -17,6 +17,7 @@ const importEvent = (client, event) => {
         ON CONFLICT DO NOTHING`;
   const values = [...eventKeys.map((k) => event[k])];
   return client.query(text, values).catch((e) => {
+    console.log("QUERY error", e);
     return { rows: [] };
   });
 };
