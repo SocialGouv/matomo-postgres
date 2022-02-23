@@ -1,5 +1,5 @@
 {
-  "name": "@socialgouv/matomo-metabase",
+  "name": "@socialgouv/matomo-postgres",
   "description": "Extract visitor events from Matomo API and push to Postgres",
   "version": "0.0.1",
   "types": "types/index.d.ts",
