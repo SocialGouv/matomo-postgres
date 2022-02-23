@@ -1,4 +1,4 @@
-# @socialgouv/matomo-metabase
+# @socialgouv/matomo-postgres
 
 Extract matomo data and push to Postgres
 
@@ -7,7 +7,7 @@ Use Matomo [`Live.getLastVisitsDetails`](https://developer.matomo.org/api-refere
 ## Usage
 
 ```sh
-npx @socialgouv/matomo-metabase [YYYY-MM-DD]
+npx @socialgouv/matomo-postgres
 ```
 
 ### Environment variables Deployment
