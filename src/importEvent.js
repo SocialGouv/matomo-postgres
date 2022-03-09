@@ -37,11 +37,13 @@ const matomoProps = [
   "visitorType",
   "siteName",
   "userId",
+  "siteSearchKeyword",
 ];
 
 /** @type Record<string, (a: import("types/matomo").ActionDetail) => string | number> */
 const actionProps = {
   action_type: (action) => action.type,
+  action_title: (action) => action.title,
   action_eventcategory: (action) => action.eventCategory,
   action_eventaction: (action) => action.eventAction,
   action_eventname: (action) => action.eventName,
