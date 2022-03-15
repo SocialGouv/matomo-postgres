@@ -22,12 +22,9 @@ async function createTable(client) {
     visitortype                 text,
     sitename                    text,
     userid                      text,
-    sitesearchkeyword           text,
     serverdateprettyfirstaction date,
     action_id                   text UNIQUE,
     action_type                 text,
-    action_title                text,
-    action_url                  text,
     action_eventcategory        text,
     action_eventaction          text,
     action_eventname            text,
@@ -35,7 +32,10 @@ async function createTable(client) {
     action_timespent            text,
     action_timestamp            timestamp with time zone,
     usercustomproperties        json,
-    usercustomdimensions        json
+    usercustomdimensions        json,
+    action_url                  text,
+    sitesearchkeyword           text,
+    action_title                text,
 )`;
   await client.query(text, []);
   const addUserCustomDimensionColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
