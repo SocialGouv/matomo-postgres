@@ -157,6 +157,7 @@ export interface ActionDetail {
   revenueTax?: number;
   revenueShipping?: number;
   revenueDiscount?: number;
+  siteSearchKeyword: string;
 }
 
 export interface Field {

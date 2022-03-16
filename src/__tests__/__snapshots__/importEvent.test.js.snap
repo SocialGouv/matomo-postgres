@@ -24,8 +24,8 @@ Array [
     "operatingsystemname": "Mac",
     "region": "Buenos Aires",
     "serverdateprettyfirstaction": "2021-08-20T21:55:12.000Z",
+    "siteSearchKeyword": undefined,
     "sitename": "tests",
-    "sitesearchkeyword": undefined,
     "usercustomdimensions": Object {
       "dimension1": "guest",
       "dimension2": "julien",
@@ -63,8 +63,44 @@ Array [
     "operatingsystemname": "Mac",
     "region": "Buenos Aires",
     "serverdateprettyfirstaction": "2021-08-20T21:55:12.000Z",
+    "siteSearchKeyword": undefined,
     "sitename": "tests",
-    "sitesearchkeyword": undefined,
+    "usercustomdimensions": Object {
+      "dimension1": "guest",
+      "dimension2": "julien",
+      "dimension3": "page",
+      "dimension4": "indonesia",
+      "dimension5": "diving",
+    },
+    "usercustomproperties": Object {},
+    "userid": "24",
+    "visitduration": "300",
+    "visitortype": "returningCustomer",
+  },
+  Object {
+    "action_eventaction": undefined,
+    "action_eventcategory": undefined,
+    "action_eventname": undefined,
+    "action_eventvalue": undefined,
+    "action_id": "124_2",
+    "action_timespent": "2",
+    "action_timestamp": "2021-08-20T21:30:22.000Z",
+    "action_title": "Divezone Brand Diving Boots - Divezone Store",
+    "action_type": "search",
+    "action_url": "https://dive-shop.net/products/diving-boots/",
+    "actions": "2",
+    "city": "Buenos Aires",
+    "country": "Argentine",
+    "dayssincefirstvisit": "23",
+    "devicebrand": "Inconnu",
+    "devicemodel": "Générique Bureau",
+    "idsite": "42",
+    "idvisit": "124",
+    "operatingsystemname": "Mac",
+    "region": "Buenos Aires",
+    "serverdateprettyfirstaction": "2021-08-20T21:55:12.000Z",
+    "siteSearchKeyword": "scuba",
+    "sitename": "tests",
     "usercustomdimensions": Object {
       "dimension1": "guest",
       "dimension2": "julien",
@@ -84,7 +120,7 @@ exports[`importEvent: should extract events from matomo visit actionsDetails and
 Array [
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, sitesearchkeyword, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, usercustomproperties, usercustomdimensions)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, usercustomdimensions)
         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
         ON CONFLICT DO NOTHING",
     Array [
@@ -102,7 +138,6 @@ Array [
       "returningCustomer",
       "tests",
       "24",
-      undefined,
       "2021-08-20T21:55:12.000Z",
       "124_0",
       "event",
@@ -114,6 +149,7 @@ Array [
       48,
       "2021-08-20T21:35:18.000Z",
       "https://dive-shop.net/products/basic-wetsuit/",
+      undefined,
       Object {
         "page-author": "Julien",
         "post-age": "-430 days",
@@ -129,7 +165,7 @@ Array [
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, sitesearchkeyword, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, usercustomproperties, usercustomdimensions)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, usercustomdimensions)
         values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
         ON CONFLICT DO NOTHING",
     Array [
@@ -147,7 +183,6 @@ Array [
       "returningCustomer",
       "tests",
       "24",
-      undefined,
       "2021-08-20T21:55:12.000Z",
       "124_1",
       "action",
@@ -159,6 +194,49 @@ Array [
       "2",
       "2021-08-20T21:30:25.000Z",
       "https://dive-shop.net/products/diving-boots/",
+      undefined,
+      Object {},
+      Object {
+        "dimension1": "guest",
+        "dimension2": "julien",
+        "dimension3": "page",
+        "dimension4": "indonesia",
+        "dimension5": "diving",
+      },
+    ],
+  ],
+  Array [
+    "insert into matomo
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, usercustomdimensions)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28)
+        ON CONFLICT DO NOTHING",
+    Array [
+      "42",
+      "124",
+      "2",
+      "Argentine",
+      "Buenos Aires",
+      "Buenos Aires",
+      "Mac",
+      "Générique Bureau",
+      "Inconnu",
+      "300",
+      "23",
+      "returningCustomer",
+      "tests",
+      "24",
+      "2021-08-20T21:55:12.000Z",
+      "124_2",
+      "search",
+      "Divezone Brand Diving Boots - Divezone Store",
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      "2",
+      "2021-08-20T21:30:22.000Z",
+      "https://dive-shop.net/products/diving-boots/",
+      "scuba",
       Object {},
       Object {
         "dimension1": "guest",

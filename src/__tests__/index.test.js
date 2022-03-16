@@ -130,7 +130,9 @@ test("run: should resume using latest event date - offset if no date provided", 
   expect(mock_matomoApi.mock.calls.length).toEqual(daysCount);
 
   // check db queries
-  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 1 + daysCount * 5); // NB_REQUEST_TO_INIT_DB + select queries + days offset
+  console.log("daysCount", daysCount);
+  //console.log("mock_pgQuery.mock.calls", mock_pgQuery.mock.calls);
+  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 1 + daysCount * 7); // NB_REQUEST_TO_INIT_DB + select queries + days offset
 });
 
 test("run: should use today date if nothing in DB", async () => {
@@ -154,7 +156,7 @@ test("run: should use today date if nothing in DB", async () => {
   expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
 
   // check the 4 events inserted
-  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 4); // NB_REQUEST_TO_INIT_DB + check date + latest + 2 inserts
+  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 5); // NB_REQUEST_TO_INIT_DB + check date + latest + 2 inserts
 });
 
 test("run: should use given date if any", async () => {
@@ -174,7 +176,7 @@ test("run: should use given date if any", async () => {
   await run(isoDate(addDays(TEST_DATE, -10)) + "T00:00:00.000Z");
 
   expect(mock_matomoApi.mock.calls.length).toEqual(11);
-  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 11 * 3); // NB_REQUEST_TO_INIT_DB + inserts. no initial select as date is provided
+  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 11 * 4); // NB_REQUEST_TO_INIT_DB + inserts. no initial select as date is provided
 });
 
 test("run: should use STARTDATE if any", async () => {
@@ -196,5 +198,5 @@ test("run: should use STARTDATE if any", async () => {
 
   expect(mock_matomoApi.mock.calls.length).toEqual(6);
 
-  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 1 + 6 * 3); // NB_REQUEST_TO_INIT_DB + initial select + inserts.
+  expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 1 + 6 * 4); // NB_REQUEST_TO_INIT_DB + initial select + inserts.
 });

@@ -35,7 +35,7 @@ async function createTable(client) {
     usercustomdimensions        json,
     action_url                  text,
     sitesearchkeyword           text,
-    action_title                text,
+    action_title                text
 )`;
   await client.query(text, []);
   const addUserCustomDimensionColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
