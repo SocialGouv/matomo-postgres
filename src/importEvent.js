@@ -37,7 +37,6 @@ const matomoProps = [
   "visitorType",
   "siteName",
   "userId",
-  "siteSearchKeyword",
 ];
 
 /** @type Record<string, (a: import("types/matomo").ActionDetail) => string | number> */
@@ -51,6 +50,7 @@ const actionProps = {
   action_timespent: (action) => action.timeSpent,
   action_timestamp: (action) => new Date(action.timestamp * 1000).toISOString(),
   action_url: (action) => action.url,
+  siteSearchKeyword: (action) => action.siteSearchKeyword,
 };
 
 /**

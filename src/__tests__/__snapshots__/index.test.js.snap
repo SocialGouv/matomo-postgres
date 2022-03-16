@@ -31,7 +31,7 @@ Array [
     usercustomdimensions        json,
     action_url                  text,
     sitesearchkeyword           text,
-    action_title                text,
+    action_title                text
 )",
   Array [],
 ]

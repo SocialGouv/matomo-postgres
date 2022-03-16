@@ -69,6 +69,27 @@
       "dimension2": "julien",
       "dimension4": "indonesia",
       "dimension5": "diving"
+    },
+    {
+      "type": "search",
+      "url": "https://dive-shop.net/products/diving-boots/",
+      "pageTitle": "Divezone Brand Diving Boots - Divezone Store",
+      "pageIdAction": "60",
+      "idpageview": "8CDIez",
+      "serverTimePretty": "20 août 2021 21:30:25",
+      "pageId": "19696664",
+      "timeSpent": "2",
+      "timeSpentPretty": "2s",
+      "pageviewPosition": "5",
+      "title": "Divezone Brand Diving Boots - Divezone Store",
+      "subtitle": "https://dive-shop.net/products/diving-boots/",
+      "icon": "",
+      "iconSVG": "plugins/Morpheus/images/action.svg",
+      "timestamp": 1629495022,
+      "dimension2": "julien",
+      "dimension4": "indonesia",
+      "dimension5": "diving",
+      "siteSearchKeyword": "scuba"
     }
   ]
 }
