@@ -27,4 +27,5 @@ export type Event = {
   action_url: string;
   usercustomproperties: Record<string, string>;
   usercustomdimensions: Record<string, string>;
+  siteSearchKeyword: string;
 };

@@ -86,8 +86,8 @@ test("importDate: should import when new results", async () => {
   };
   //@ts-expect-error
   const imported = await importDate(fakeClient, matomoSpy, new Date("2021-08-03T00:00:00"));
-  expect(pgSpy.mock.calls.length).toEqual(3);
-  expect(imported.length).toEqual(2);
+  expect(pgSpy.mock.calls.length).toEqual(4);
+  expect(imported.length).toEqual(3);
   expect(matomoSpy.mock.calls[0][0].filter_offset).toEqual(0);
 });
 
@@ -110,8 +110,8 @@ test("importDate: should offset matomo calls when results already exist", async 
   };
   //@ts-expect-error
   const imported = await importDate(fakeClient, matomoSpy, new Date("2021-08-03T00:00:00"));
-  expect(pgSpy.mock.calls.length).toEqual(3);
-  expect(imported.length).toEqual(2);
+  expect(pgSpy.mock.calls.length).toEqual(4);
+  expect(imported.length).toEqual(3);
   expect(matomoSpy.mock.calls[0][0].filter_offset).toEqual(42);
 });
 

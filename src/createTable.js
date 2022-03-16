@@ -33,7 +33,9 @@ async function createTable(client) {
     action_timestamp            timestamp with time zone,
     usercustomproperties        json,
     usercustomdimensions        json,
-    action_url                  text
+    action_url                  text,
+    sitesearchkeyword           text,
+    action_title                text
 )`;
   await client.query(text, []);
   const addUserCustomDimensionColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
@@ -43,6 +45,19 @@ async function createTable(client) {
   const addActionUrlColumn = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
   ADD COLUMN IF NOT EXISTS "action_url" text;`;
   await client.query(addActionUrlColumn, []);
+
+  const addSiteSearchKeyword = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
+  ADD COLUMN IF NOT EXISTS "sitesearchkeyword" text;`;
+  await client.query(addSiteSearchKeyword, []);
+
+  const addActionName = `ALTER TABLE IF EXISTS  ${client.escapeIdentifier(DESTINATION_TABLE)} 
+  ADD COLUMN IF NOT EXISTS "action_title" text;`;
+  await client.query(addActionName, []);
+
+  // --------------------------------------------- //
+  // If you add new query: Don't forget to update  //
+  // const `NB_REQUEST_TO_INIT_DB` (index.test.js) //
+  // --------------------------------------------- //
 }
 
 module.exports = { createTable };

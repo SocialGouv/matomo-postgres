@@ -29,7 +29,9 @@ Array [
     action_timestamp            timestamp with time zone,
     usercustomproperties        json,
     usercustomdimensions        json,
-    action_url                  text
+    action_url                  text,
+    sitesearchkeyword           text,
+    action_title                text
 )",
   Array [],
 ]

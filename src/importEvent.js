@@ -42,6 +42,7 @@ const matomoProps = [
 /** @type Record<string, (a: import("types/matomo").ActionDetail) => string | number> */
 const actionProps = {
   action_type: (action) => action.type,
+  action_title: (action) => action.title,
   action_eventcategory: (action) => action.eventCategory,
   action_eventaction: (action) => action.eventAction,
   action_eventname: (action) => action.eventName,
@@ -49,6 +50,7 @@ const actionProps = {
   action_timespent: (action) => action.timeSpent,
   action_timestamp: (action) => new Date(action.timestamp * 1000).toISOString(),
   action_url: (action) => action.url,
+  siteSearchKeyword: (action) => action.siteSearchKeyword,
 };
 
 /**
