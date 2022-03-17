@@ -10,7 +10,7 @@
     "access": "public"
   },
   "bin": {
-    "matomo-metabase": "./bin/index.js"
+    "matomo-postgres": "./bin/index.js"
   },
   "scripts": {
     "start": "node ./src/index.js",
