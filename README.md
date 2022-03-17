@@ -1,8 +1,8 @@
 # @socialgouv/matomo-postgres
 
-Extract matomo data and push to Postgres
+![header](./header.png)
 
-Use Matomo [`Live.getLastVisitsDetails`](https://developer.matomo.org/api-reference/reporting-api) API to extract visits informations.
+Extract matomo data from [`Live.getLastVisitsDetails`](https://developer.matomo.org/api-reference/reporting-api) API and push events and visits informations to Postgres.
 
 ## Usage
 
