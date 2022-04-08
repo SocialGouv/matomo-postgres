@@ -55,9 +55,10 @@ async function createTable(client) {
   // const `NB_REQUEST_TO_INIT_DB` (index.test.js) //
   // --------------------------------------------- //
 
-  migrations.forEach(async (query) => {
+  for(const query of migrations) {
     await client.query(query, []);
-  });
+  }
+
 }
 
 module.exports = { createTable };
