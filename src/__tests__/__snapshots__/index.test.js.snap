@@ -24,7 +24,7 @@ Array [
     action_eventcategory        text,
     action_eventaction          text,
     action_eventname            text,
-    action_eventvalue           text,
+    action_eventvalue           decimal,
     action_timespent            text,
     action_timestamp            timestamp with time zone,
     usercustomproperties        json,
