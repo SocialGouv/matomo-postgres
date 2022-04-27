@@ -48,6 +48,10 @@ async function createTable(client) {
     `ALTER TABLE IF EXISTS ${table} ADD COLUMN IF NOT EXISTS "sitesearchkeyword" text;`,
     `ALTER TABLE IF EXISTS ${table} ADD COLUMN IF NOT EXISTS "action_title" text;`,
     `ALTER TABLE IF EXISTS ${table} ALTER COLUMN action_eventvalue TYPE decimal USING action_eventvalue::decimal;`,
+    `CREATE INDEX IF NOT EXISTS idx_action_timestamp ON ${table} (action_timestamp);`,
+    `CREATE INDEX IF NOT EXISTS idx_idvisit ON ${table}(idvisit);`,
+    `CREATE INDEX IF NOT EXISTS idx_action_eventcategory ON ${table}(action_eventcategory);`,
+    `CREATE INDEX IF NOT EXISTS idx_action_type ON ${table}(action_type);`,
   ];
 
   // --------------------------------------------- //
@@ -55,10 +59,9 @@ async function createTable(client) {
   // const `NB_REQUEST_TO_INIT_DB` (index.test.js) //
   // --------------------------------------------- //
 
-  for(const query of migrations) {
+  for (const query of migrations) {
     await client.query(query, []);
   }
-
 }
 
 module.exports = { createTable };
