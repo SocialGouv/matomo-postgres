@@ -12,7 +12,7 @@ const matomoVisit = require("./visit.json");
 
 const run = require("../index");
 
-const NB_REQUEST_TO_INIT_DB = 10; // Number of query to init DB (createTable.js)
+const NB_REQUEST_TO_INIT_DB = 20; // Number of query to init DB (createTable.js)
 const TEST_DATE = new Date();
 
 // @ts-ignore
@@ -130,8 +130,6 @@ test("run: should resume using latest event date - offset if no date provided", 
   expect(mock_matomoApi.mock.calls.length).toEqual(daysCount);
 
   // check db queries
-  console.log("daysCount", daysCount);
-  //console.log("mock_pgQuery.mock.calls", mock_pgQuery.mock.calls);
   expect(mock_pgQuery.mock.calls.length).toEqual(NB_REQUEST_TO_INIT_DB + 1 + daysCount * 7); // NB_REQUEST_TO_INIT_DB + select queries + days offset
 });
 
@@ -152,7 +150,6 @@ test("run: should use today date if nothing in DB", async () => {
 
   // check matomo requests
   expect(mock_matomoApi.mock.calls.length).toEqual(1);
-  console.log(TEST_DATE, isoDate(TEST_DATE));
   expect(mock_matomoApi.mock.calls[0][0].date).toEqual(isoDate(TEST_DATE));
 
   // check the 4 events inserted
