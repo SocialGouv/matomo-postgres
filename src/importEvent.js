@@ -92,7 +92,7 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
       }),
       // custom variables
       usercustomproperties,
-      usercustomdimensions,
+      ...usercustomdimensions,
     };
     return event;
   });
