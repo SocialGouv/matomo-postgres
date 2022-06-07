@@ -96,6 +96,11 @@ export type Visit = {
   dimension3?: string;
   dimension4?: string;
   dimension5?: string;
+  dimension6?: string;
+  dimension7?: string;
+  dimension8?: string;
+  dimension9?: string;
+  dimension10?: string;
   experiments: Experiment[];
   customVariables: any;
   formConversions: number;
