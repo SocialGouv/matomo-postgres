@@ -73,7 +73,7 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
 
     /** @type {Record<string, string>} */
     const usercustomdimensions = {};
-    for (let k = 1; k < 10; k++) {
+    for (let k = 1; k < 11; k++) {
       const dimension = `dimension${k}`;
       const value = actionDetail[dimension] || matomoVisit[dimension];
       if (!value) continue; // max 10 custom variables

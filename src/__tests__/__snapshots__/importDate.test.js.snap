@@ -21,8 +21,8 @@ Array [
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5, dimension6, dimension7, dimension8, dimension9, dimension10)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
         ON CONFLICT DO NOTHING",
     Array [
       "42",
@@ -60,12 +60,17 @@ Array [
       "page",
       "indonesia",
       "diving",
+      "shop",
+      "v1.2.3",
+      "fr",
+      "light",
+      "36",
     ],
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5, dimension6, dimension7, dimension8, dimension9, dimension10)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
         ON CONFLICT DO NOTHING",
     Array [
       "42",
@@ -100,12 +105,17 @@ Array [
       "page",
       "indonesia",
       "diving",
+      "shop",
+      "v1.2.3",
+      "fr",
+      "light",
+      "36",
     ],
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5, dimension6, dimension7, dimension8, dimension9, dimension10)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
         ON CONFLICT DO NOTHING",
     Array [
       "42",
@@ -140,12 +150,17 @@ Array [
       "page",
       "indonesia",
       "diving",
+      "shop",
+      "v1.2.3",
+      "fr",
+      "light",
+      "36",
     ],
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5, dimension6, dimension7, dimension8, dimension9, dimension10)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
         ON CONFLICT DO NOTHING",
     Array [
       "42",
@@ -183,12 +198,17 @@ Array [
       "page",
       "indonesia",
       "diving",
+      "shop",
+      "v1.2.3",
+      "fr",
+      "light",
+      "36",
     ],
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5, dimension6, dimension7, dimension8, dimension9, dimension10)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
         ON CONFLICT DO NOTHING",
     Array [
       "42",
@@ -223,12 +243,17 @@ Array [
       "page",
       "indonesia",
       "diving",
+      "shop",
+      "v1.2.3",
+      "fr",
+      "light",
+      "36",
     ],
   ],
   Array [
     "insert into matomo
-        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5)
-        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32)
+        (idsite, idvisit, actions, country, region, city, operatingsystemname, devicemodel, devicebrand, visitduration, dayssincefirstvisit, visitortype, sitename, userid, serverdateprettyfirstaction, action_id, action_type, action_title, action_eventcategory, action_eventaction, action_eventname, action_eventvalue, action_timespent, action_timestamp, action_url, siteSearchKeyword, usercustomproperties, dimension1, dimension2, dimension3, dimension4, dimension5, dimension6, dimension7, dimension8, dimension9, dimension10)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37)
         ON CONFLICT DO NOTHING",
     Array [
       "42",
@@ -263,6 +288,11 @@ Array [
       "page",
       "indonesia",
       "diving",
+      "shop",
+      "v1.2.3",
+      "fr",
+      "light",
+      "36",
     ],
   ],
 ]
