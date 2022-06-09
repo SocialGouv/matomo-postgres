@@ -92,6 +92,10 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
       }),
       // custom variables
       usercustomproperties,
+      // custom dimensions
+      // We keep both for backwards compatibility. 
+      // Current implementation is flat with one column for each dimension.
+      usercustomdimensions,
       ...usercustomdimensions,
     };
     return event;
