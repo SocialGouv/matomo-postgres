@@ -15,6 +15,11 @@
   "city": "Buenos Aires",
   "dimension1": "guest",
   "dimension3": "page",
+  "dimension6": "shop",
+  "dimension7": "v1.2.3",
+  "dimension8": "fr",
+  "dimension9": "light",
+  "dimension10": "36",
   "firstActionTimestamp": 1629496512,
   "actionDetails": [
     {
