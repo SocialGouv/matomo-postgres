@@ -72,6 +72,7 @@ async function createTable(client) {
     `CREATE INDEX IF NOT EXISTS idx_idvisit ON ${table}(idvisit);`,
     `CREATE INDEX IF NOT EXISTS idx_action_eventcategory ON ${table}(action_eventcategory);`,
     `CREATE INDEX IF NOT EXISTS idx_action_type ON ${table}(action_type);`,
+    `CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_action_eventaction ON ${table}(action_eventaction);`,
   ];
 
   // --------------------------------------------- //
