@@ -30,9 +30,9 @@ docker-compose up
 export MATOMO_URL=
 export MATOMO_SITE=
 export MATOMO_KEY=
-export DESTINATION_TABLE=
-export STARTDATE=
-export OFFSET=
+export DESTINATION_TABLE= # optional
+export STARTDATE= # optional 
+export OFFSET= # optional
 export PGDATABASE=postgres://postgres:postgres@127.0.0.1:5455/postgres
 yarn start
 ```
