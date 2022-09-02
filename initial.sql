@@ -1,18 +1,18 @@
-const { Client } = require("pg");
+-- converting existing matomo table to partitioned witg pg_partman
+-- usage : ON_ERROR_STOP=1 psql < partition.sql
 
-const { DESTINATION_TABLE } = require("./config");
-
-/**
- *
- * @param {Client} client
- */
-async function createTable(client) {
-  const table = client.escapeIdentifier(DESTINATION_TABLE);
-  const text = `
+--- pg_partman setup
 
 CREATE SCHEMA IF NOT EXISTS partman;
 CREATE EXTENSION IF NOT EXISTS pg_partman SCHEMA partman;
-CREATE TABLE IF NOT EXISTS ${table}
+
+--- backup and recreate a new partionned matomo table
+
+CREATE TABLE IF NOT EXISTS matomo_tmp as (select * from matomo);
+
+ALTER TABLE IF EXISTS matomo RENAME TO matomo_backup;
+
+CREATE TABLE IF NOT EXISTS matomo
 (
     idsite                      text,
     idvisit                     text,
@@ -53,15 +53,21 @@ CREATE TABLE IF NOT EXISTS ${table}
     sitesearchkeyword           text,
     action_title                text
 ) PARTITION BY RANGE (action_timestamp);
-`;
 
-  await client.query(text, []);
+ALTER TABLE IF EXISTS matomo ADD CONSTRAINT unique_action_id UNIQUE (action_id, action_timestamp);
+ALTER TABLE IF EXISTS matomo ALTER COLUMN action_eventvalue TYPE decimal USING action_eventvalue::decimal;
+CREATE INDEX IF NOT EXISTS idx_action_timestamp_matomo ON matomo (action_timestamp);
+CREATE INDEX IF NOT EXISTS idx_idvisit_matomo ON matomo(idvisit);
+CREATE INDEX IF NOT EXISTS idx_action_eventcategory_matomo ON matomo(action_eventcategory);
+CREATE INDEX IF NOT EXISTS idx_action_type_matomo ON matomo(action_type);
+CREATE INDEX IF NOT EXISTS idx_action_eventaction_matomo ON matomo(action_eventaction);
 
-  const migrations = [];
+SELECT partman.create_parent('public.matomo', 'action_timestamp', 'native', 'monthly');
 
-  for (const query of migrations) {
-    await client.query(query, []);
-  }
-}
+-- Import des données depuis la table standard vers la table partitionnée
+CALL partman.partition_data_proc('public.matomo', p_source_table := 'public.matomo_tmp', p_order:= 'DESC');
 
-module.exports = { createTable };
+VACUUM ANALYZE public.matomo;
+
+DROP TABLE if exists matomo_tmp;
+
