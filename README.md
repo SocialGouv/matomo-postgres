@@ -4,7 +4,11 @@
 
 Extract matomo data from [`Live.getLastVisitsDetails`](https://developer.matomo.org/api-reference/reporting-api) API and push events and visits informations to Postgres.
 
+Use [pg_partman](https://github.com/pgpartman/pg_partman) to partition data by month.
+
 ## Usage
+
+Create the [initial table](./initial.sql) database table then run the following job with correct environment variables.
 
 ```sh
 npx @socialgouv/matomo-postgres
@@ -31,7 +35,7 @@ export MATOMO_URL=
 export MATOMO_SITE=
 export MATOMO_KEY=
 export DESTINATION_TABLE= # optional
-export STARTDATE= # optional 
+export STARTDATE= # optional
 export OFFSET= # optional
 export PGDATABASE=postgres://postgres:postgres@127.0.0.1:5455/postgres
 yarn start

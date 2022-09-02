@@ -12,7 +12,7 @@ const matomoVisit = require("./visit.json");
 
 const run = require("../index");
 
-const NB_REQUEST_TO_INIT_DB = 21; // Number of query to init DB (createTable.js)
+const NB_REQUEST_TO_INIT_DB = 1; // Number of query to init DB (createTable.js)
 const TEST_DATE = new Date();
 
 // @ts-ignore
@@ -86,11 +86,6 @@ test("run: should fetch the latest event date if no date provided", async () => 
 
   // check db queries
   expect(mock_pgQuery.mock.calls[NB_REQUEST_TO_INIT_DB][0]).toEqual(
-    // call 0 is create table
-    // call 1 is add column usercustomdimension
-    // call 2 is add column action_url
-    // ...
-    //
     "select action_timestamp from matomo order by action_timestamp desc limit 1"
   );
 });

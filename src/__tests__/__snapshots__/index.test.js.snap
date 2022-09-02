@@ -2,8 +2,12 @@
 
 exports[`run: should create table 1`] = `
 Array [
-  "CREATE TABLE IF NOT EXISTS matomo
-  (
+  "
+
+CREATE SCHEMA IF NOT EXISTS partman;
+CREATE EXTENSION IF NOT EXISTS pg_partman SCHEMA partman;
+CREATE TABLE IF NOT EXISTS matomo
+(
     idsite                      text,
     idvisit                     text,
     actions                     text,
@@ -19,14 +23,14 @@ Array [
     sitename                    text,
     userid                      text,
     serverdateprettyfirstaction date,
-    action_id                   text UNIQUE,
+    action_id                   text,
     action_type                 text,
     action_eventcategory        text,
     action_eventaction          text,
     action_eventname            text,
     action_eventvalue           decimal,
     action_timespent            text,
-    action_timestamp            timestamp with time zone,
+    action_timestamp            timestamp with time zone DEFAULT now(),
     usercustomproperties        json,
     usercustomdimensions        json,
     dimension1                  text,
@@ -42,7 +46,8 @@ Array [
     action_url                  text,
     sitesearchkeyword           text,
     action_title                text
-)",
+) PARTITION BY RANGE (action_timestamp);
+",
   Array [],
 ]
 `;
