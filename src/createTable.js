@@ -63,7 +63,9 @@ CREATE TABLE IF NOT EXISTS ${table}
      CREATE INDEX IF NOT EXISTS idx_dimension3 ON matomo(dimension3);
      CREATE INDEX IF NOT EXISTS idx_dimension4 ON matomo(dimension4);
      CREATE INDEX IF NOT EXISTS idx_dimension5 ON matomo(dimension5);
-     CREATE INDEX IF NOT EXISTS idx_userid ON matomo(userid);`,
+     CREATE INDEX IF NOT EXISTS idx_userid ON matomo(userid);
+     CREATE INDEX IF NOT EXISTS idx_actionurl ON matomo(action_url);
+     CREATE INDEX IF NOT EXISTS idx_region ON matomo(region);`,
   ];
 
   for (const query of migrations) {
