@@ -57,7 +57,14 @@ CREATE TABLE IF NOT EXISTS ${table}
 
   await client.query(text, []);
 
-  const migrations = [];
+  const migrations = [
+    `CREATE INDEX IF NOT EXISTS idx_dimension1 ON matomo(dimension1);
+     CREATE INDEX IF NOT EXISTS idx_dimension2 ON matomo(dimension2);
+     CREATE INDEX IF NOT EXISTS idx_dimension3 ON matomo(dimension3);
+     CREATE INDEX IF NOT EXISTS idx_dimension4 ON matomo(dimension4);
+     CREATE INDEX IF NOT EXISTS idx_dimension5 ON matomo(dimension5);
+     CREATE INDEX IF NOT EXISTS idx_userid ON matomo(userid);`,
+  ];
 
   for (const query of migrations) {
     await client.query(query, []);
