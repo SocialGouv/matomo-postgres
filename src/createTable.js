@@ -61,18 +61,18 @@ CREATE TABLE IF NOT EXISTS ${table}
   await client.query(text, []);
 
   const migrations = [
-    `CREATE INDEX IF NOT EXISTS idx_dimension1 ON matomo(dimension1);
-     CREATE INDEX IF NOT EXISTS idx_dimension2 ON matomo(dimension2);
-     CREATE INDEX IF NOT EXISTS idx_dimension3 ON matomo(dimension3);
-     CREATE INDEX IF NOT EXISTS idx_dimension4 ON matomo(dimension4);
-     CREATE INDEX IF NOT EXISTS idx_dimension5 ON matomo(dimension5);
-     CREATE INDEX IF NOT EXISTS idx_userid ON matomo(userid);
-     CREATE INDEX IF NOT EXISTS idx_actionurl ON matomo(action_url);
-     CREATE INDEX IF NOT EXISTS idx_region ON matomo(region);`,
-    `ALTER TABLE matomo ADD COLUMN IF NOT EXISTS visitorid text;
-     ALTER TABLE matomo ADD COLUMN IF NOT EXISTS referrertype text;
-     ALTER TABLE matomo ADD COLUMN IF NOT EXISTS referrername text;
-     CREATE INDEX IF NOT EXISTS idx_visitorid ON matomo(visitorid);`,
+    `CREATE INDEX IF NOT EXISTS idx_dimension1 ON ${table}(dimension1);
+     CREATE INDEX IF NOT EXISTS idx_dimension2 ON ${table}(dimension2);
+     CREATE INDEX IF NOT EXISTS idx_dimension3 ON ${table}(dimension3);
+     CREATE INDEX IF NOT EXISTS idx_dimension4 ON ${table}(dimension4);
+     CREATE INDEX IF NOT EXISTS idx_dimension5 ON ${table}(dimension5);
+     CREATE INDEX IF NOT EXISTS idx_userid ON ${table}(userid);
+     CREATE INDEX IF NOT EXISTS idx_actionurl ON ${table}(action_url);
+     CREATE INDEX IF NOT EXISTS idx_region ON ${table}(region);`,
+    `ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS visitorid text;
+     ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS referrertype text;
+     ALTER TABLE ${table} ADD COLUMN IF NOT EXISTS referrername text;
+     CREATE INDEX IF NOT EXISTS idx_visitorid ON ${table}(visitorid);`,
   ];
 
   for (const query of migrations) {
