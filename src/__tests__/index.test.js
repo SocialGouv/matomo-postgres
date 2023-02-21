@@ -12,7 +12,7 @@ const matomoVisit = require("./visit.json");
 
 const run = require("../index");
 
-const NB_REQUEST_TO_INIT_DB = 1; // Number of query to init DB (createTable.js)
+const NB_REQUEST_TO_INIT_DB = 3; // Number of query to init DB (createTable.js)
 const TEST_DATE = new Date();
 
 // @ts-ignore
