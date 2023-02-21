@@ -35,6 +35,9 @@ const matomoProps = [
   "visitDuration",
   "daysSinceFirstVisit",
   "visitorType",
+  "visitorId",
+  "referrerType",
+  "referrerName",
   "siteName",
   "userId",
 ];
@@ -93,7 +96,7 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
       // custom variables
       usercustomproperties,
       // custom dimensions
-      // We keep both for backwards compatibility. 
+      // We keep both for backwards compatibility.
       // Current implementation is flat with one column for each dimension.
       usercustomdimensions,
       ...usercustomdimensions,

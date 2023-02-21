@@ -45,7 +45,10 @@ CREATE TABLE IF NOT EXISTS matomo
     dimension10                 text,
     action_url                  text,
     sitesearchkeyword           text,
-    action_title                text
+    action_title                text,
+    visitorid                   text,
+    referrertype                text,
+    referrername                text
 ) PARTITION BY RANGE (action_timestamp);
 ",
   Array [],
