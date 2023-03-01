@@ -1,28 +1,31 @@
-const pAll = require("p-all");
-const debug = require("debug")("index");
-const eachDayOfInterval = require("date-fns/eachDayOfInterval");
-const PiwikClient = require("piwik-client");
-const { Client } = require("pg");
+import { Kysely } from "kysely";
 
-const { MATOMO_KEY, MATOMO_URL, MATOMO_SITE, PGDATABASE, DESTINATION_TABLE, OFFSET } = require("./config");
+import pAll from "p-all";
 
-const { createTable } = require("./createTable");
-const { importDate } = require("./importDate");
+import startDebug from "debug";
 
-// run a sync with a 3-days range
-/**
- *
- * @param {string} [date]
- * @returns
- */
-async function run(date) {
+import eachDayOfInterval from "date-fns/eachDayOfInterval";
+import PiwikClient from "piwik-client";
+//const { Client } from "pg";
+import { Database, db } from "./db";
+
+import { MATOMO_KEY, MATOMO_URL, MATOMO_SITE, PGDATABASE, DESTINATION_TABLE, OFFSET } from "./config";
+
+//const { createTable } = require("./createTable");
+import { importDate } from "./importDate";
+
+const debug = startDebug("index");
+
+async function run(date?: string) {
   debug("run, date=" + date);
-  const client = new Client({ connectionString: PGDATABASE });
-  await client.connect();
+  //const client = db
+  //const client = new Client({ connectionString: PGDATABASE });
+  //await client.connect();
 
   const piwik = new PiwikClient(MATOMO_URL, MATOMO_KEY);
 
-  await createTable(client);
+  // todo
+  //await createTable(client);
 
   // priority:
   //  - optional parameter date
@@ -32,11 +35,12 @@ async function run(date) {
 
   let referenceDate;
   if (!referenceDate && date) referenceDate = new Date(date);
-  if (!referenceDate) referenceDate = await findLastEventInMatomo(client);
+  if (!referenceDate) referenceDate = await findLastEventInMatomo(db);
   if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
   if (!referenceDate) referenceDate = new Date();
 
-  // @ts-ignore
+  console.log("referenceDate", referenceDate);
+
   const dates = eachDayOfInterval({
     start: referenceDate,
     end: new Date(),
@@ -44,6 +48,7 @@ async function run(date) {
 
   debug(`import : ${dates.join(", ")}`);
 
+  /*
   // for each date, serial-import data
   const res = await pAll(
     dates.map((date) => () => importDate(client, piwik.api.bind(piwik), date)),
@@ -54,6 +59,7 @@ async function run(date) {
   debug("close");
 
   return res;
+  */
 }
 
 module.exports = run;
@@ -68,12 +74,21 @@ if (require.main === module) {
   })();
 }
 
-async function findLastEventInMatomo(client) {
-  const a = await client.query(
+async function findLastEventInMatomo(db: Kysely<Database>) {
+  const a = await db
+    .selectFrom(DESTINATION_TABLE)
+    .select("action_timestamp")
+    .orderBy("action_timestamp", "desc")
+    .limit(1)
+    .execute();
+  console.log(a);
+  /*
+  client.query(
     `select action_timestamp from ${client.escapeIdentifier(DESTINATION_TABLE)} order by action_timestamp desc limit 1`
   );
   if (!a.rows.length || !a.rows[0].action_timestamp) return null;
   const d = new Date(a.rows[0].action_timestamp);
   d.setDate(d.getDate() - +OFFSET);
   return d;
+  */
 }
