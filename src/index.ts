@@ -1,4 +1,4 @@
-import { Kysely } from "kysely";
+import { Kysely, sql } from "kysely";
 
 import pAll from "p-all";
 
@@ -37,32 +37,30 @@ async function run(date?: string) {
   if (!referenceDate && date) referenceDate = new Date(date);
   if (!referenceDate) referenceDate = await findLastEventInMatomo(db);
   if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
-  if (!referenceDate) referenceDate = new Date();
+  if (!referenceDate) referenceDate = new Date(new Date().getTime() - +OFFSET * 24 * 60 * 60 * 1000);
 
-  console.log("referenceDate", referenceDate);
+  // debug(`import : reference date : ${referenceDate}`);
+  // return;
 
   const dates = eachDayOfInterval({
     start: referenceDate,
     end: new Date(),
   });
 
-  debug(`import : ${dates.join(", ")}`);
+  debug(`import starting at : ${dates[0].toISOString()}`);
 
-  /*
   // for each date, serial-import data
   const res = await pAll(
-    dates.map((date) => () => importDate(client, piwik.api.bind(piwik), date)),
+    dates.map((date) => () => importDate(piwik.api.bind(piwik), date)),
     { concurrency: 1, stopOnError: true }
   );
 
-  await client.end();
   debug("close");
 
   return res;
-  */
 }
 
-module.exports = run;
+export default run;
 
 if (require.main === module) {
   (async () => {
@@ -71,24 +69,22 @@ if (require.main === module) {
     if (!PGDATABASE) return console.error("Missing env PGDATABASE");
     await run();
     debug("run finished");
+    db.destroy();
   })();
 }
 
 async function findLastEventInMatomo(db: Kysely<Database>) {
-  const a = await db
+  const latest = await db
     .selectFrom(DESTINATION_TABLE)
-    .select("action_timestamp")
+    .select(sql<string>`action_timestamp at time zone 'UTC'`.as("action_timestamp"))
     .orderBy("action_timestamp", "desc")
     .limit(1)
-    .execute();
-  console.log(a);
-  /*
-  client.query(
-    `select action_timestamp from ${client.escapeIdentifier(DESTINATION_TABLE)} order by action_timestamp desc limit 1`
-  );
-  if (!a.rows.length || !a.rows[0].action_timestamp) return null;
-  const d = new Date(a.rows[0].action_timestamp);
-  d.setDate(d.getDate() - +OFFSET);
-  return d;
-  */
+    .executeTakeFirst();
+
+  if (latest) {
+    const date = new Date(latest.action_timestamp);
+    return new Date(date.getTime() - +OFFSET * 24 * 60 * 60 * 1000);
+  }
+
+  return null;
 }

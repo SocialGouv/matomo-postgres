@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/debug": "^4.1.7",
     "@types/jest": "^27.0.3",
+    "@types/node": "^18.14.2",
     "@types/pg": "^8.6.1",
     "jest": "^27.1.1",
     "ts-node": "^10.9.1",

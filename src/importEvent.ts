@@ -1,6 +1,8 @@
-const { Client } = require("pg");
+import { Client } from "pg";
+import { ActionDetail, Visit } from "types/matomo-api";
 
-const { DESTINATION_TABLE } = require("./config");
+import { DESTINATION_TABLE } from "./config";
+import { Database, db } from "./db";
 
 /**
  *
@@ -9,18 +11,15 @@ const { DESTINATION_TABLE } = require("./config");
  *
  * @return {Promise<Record<"rows", any[]>>}
  */
-const importEvent = (client, event) => {
-  const eventKeys = Object.keys(event);
-  const text = `insert into ${client.escapeIdentifier(DESTINATION_TABLE)}
-        (${eventKeys.join(", ")})
-        values (${eventKeys.map((k, i) => `\$${i + 1}`).join(", ")})
-        ON CONFLICT DO NOTHING`;
-  const values = [...eventKeys.map((k) => event[k])];
-  return client.query(text, values).catch((e) => {
-    console.log("QUERY error", e);
-    return { rows: [] };
-  });
-};
+export const importEvent = (event: any) =>
+  db
+    .insertInto(DESTINATION_TABLE)
+    .values(event)
+    .onConflict((oc) => {
+      console.error("warning : event skipped (conflict)");
+      return oc.doNothing();
+    })
+    .execute();
 
 const matomoProps = [
   "idSite",
@@ -42,35 +41,28 @@ const matomoProps = [
   "userId",
 ];
 
-/** @type Record<string, (a: import("types/matomo").ActionDetail) => string | number> */
+/** @type Record<string, (a: import("types/matomo-api").ActionDetail) => string | number> */
 const actionProps = {
-  action_type: (action) => action.type,
-  action_title: (action) => action.title,
-  action_eventcategory: (action) => action.eventCategory,
-  action_eventaction: (action) => action.eventAction,
-  action_eventname: (action) => action.eventName,
-  action_eventvalue: (action) => action.eventValue,
-  action_timespent: (action) => action.timeSpent,
-  action_timestamp: (action) => new Date(action.timestamp * 1000).toISOString(),
-  action_url: (action) => action.url,
-  siteSearchKeyword: (action) => action.siteSearchKeyword,
+  action_type: (action: ActionDetail) => action.type,
+  action_title: (action: ActionDetail) => action.title,
+  action_eventcategory: (action: ActionDetail) => action.eventCategory,
+  action_eventaction: (action: ActionDetail) => action.eventAction,
+  action_eventname: (action: ActionDetail) => action.eventName,
+  action_eventvalue: (action: ActionDetail) => action.eventValue,
+  action_timespent: (action: ActionDetail) => action.timeSpent,
+  action_timestamp: (action: ActionDetail) => new Date(action.timestamp * 1000).toISOString(),
+  action_url: (action: ActionDetail) => action.url,
+  sitesearchkeyword: (action: ActionDetail) => action.siteSearchKeyword,
 };
 
-/**
- * Convert a single matomo visit {<import("types/matomo").Visit} to multiple {Event[]}
- *
- * @param {Partial<import("types/matomo").Visit>} matomoVisit
- *
- * @return {import("types").Event[]} list of events
- *
- */
-const getEventsFromMatomoVisit = (matomoVisit) => {
+export const getEventsFromMatomoVisit = (matomoVisit: Visit) => {
   return matomoVisit.actionDetails.map((actionDetail, actionIndex) => {
     /** @type {Record<string, string>} */
     const usercustomproperties = {};
     for (let k = 1; k < 10; k++) {
       const property = actionDetail.customVariables && actionDetail.customVariables[k];
       if (!property) continue; // max 10 custom variables
+      //@ts-ignore
       usercustomproperties[property[`customVariableName${k}`]] = property[`customVariableValue${k}`];
     }
 
@@ -78,18 +70,20 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
     const usercustomdimensions = {};
     for (let k = 1; k < 11; k++) {
       const dimension = `dimension${k}`;
+      //@ts-ignore
       const value = actionDetail[dimension] || matomoVisit[dimension];
       if (!value) continue; // max 10 custom variables
+      //@ts-ignore
       usercustomdimensions[dimension] = value;
     }
 
-    /** @type {import("types").Event} */
-    // @ts-ignore
     const event = {
       // default matomo visit properties
+      //@ts-ignore
       ...matomoProps.reduce((a, prop) => ({ ...a, [prop.toLowerCase()]: matomoVisit[prop] }), {}),
       serverdateprettyfirstaction: new Date((matomoVisit.firstActionTimestamp || 0) * 1000).toISOString(),
       // action specific properties
+      //@ts-ignore
       ...Object.keys(actionProps).reduce((a, prop) => ({ ...a, [prop]: actionProps[prop](actionDetail) }), {
         action_id: `${matomoVisit.idVisit}_${actionIndex}`,
       }),
@@ -104,5 +98,3 @@ const getEventsFromMatomoVisit = (matomoVisit) => {
     return event;
   });
 };
-
-module.exports = { getEventsFromMatomoVisit, importEvent };

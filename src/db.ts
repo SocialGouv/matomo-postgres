@@ -3,8 +3,9 @@ import { Kysely, PostgresDialect } from "kysely";
 import { MatomoTable, MatomoTableName } from "types";
 const { PGDATABASE } = require("./config");
 
-// Keys of this interface are table names.
-export type Database = Record<MatomoTableName, MatomoTable>;
+export interface Database {
+  [key: string]: MatomoTable;
+}
 
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
@@ -12,4 +13,10 @@ export const db = new Kysely<Database>({
       connectionString: PGDATABASE,
     }),
   }),
+  log(event) {
+    if (event.level === "query") {
+      //  console.log(event.query.sql);
+      //console.log(event.query.parameters);
+    }
+  },
 });

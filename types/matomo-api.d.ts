@@ -183,8 +183,7 @@ export interface ItemDetail {
 }
 
 export interface CustomVariables {
-  "1": N1;
-  "2": N2;
+  [key: string]: N1 | N2 | N3 | N4 | N5 | N6 | N7 | N8 | N9;
 }
 
 export interface N1 {
@@ -195,6 +194,36 @@ export interface N1 {
 export interface N2 {
   customVariablePageName2: string;
   customVariablePageValue2: string;
+}
+
+export interface N3 {
+  customVariablePageName3: string;
+  customVariablePageValue3: string;
+}
+
+export interface N4 {
+  customVariablePageName4: string;
+  customVariablePageValue4: string;
+}
+export interface N5 {
+  customVariablePageName5: string;
+  customVariablePageValue5: string;
+}
+export interface N6 {
+  customVariablePageName6: string;
+  customVariablePageValue6: string;
+}
+export interface N7 {
+  customVariablePageName7: string;
+  customVariablePageValue7: string;
+}
+export interface N8 {
+  customVariablePageName8: string;
+  customVariablePageValue8: string;
+}
+export interface N9 {
+  customVariablePageName9: string;
+  customVariablePageValue9: string;
 }
 
 export interface PluginsIcon {
