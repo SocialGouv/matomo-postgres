@@ -11,38 +11,26 @@ import { importEvent, getEventsFromMatomoVisit } from "./importEvent";
 import { RESULTPERPAGE, MATOMO_SITE, DESTINATION_TABLE } from "./config";
 
 const debug = startDebug("importDate");
-/**
- * return date as ISO yyyy-mm-dd
- *
- * @param {Date} date date
- *
- * @returns {string}
- */
-// @ts-ignore
-const isoDate = (date) => formatISO(date, { representation: "date" });
 
-/**
- * check count if imported rows for given date
- *
- * @param {Date} date datetime as ISO string
- *
- * @returns {Promise<any>}
- */
+/** return date as ISO yyyy-mm-dd */
+const isoDate = (date: Date) => formatISO(date, { representation: "date" });
+
+/** check how many visits complete for a given date */
 const getRecordsCount = async (date: string): Promise<number> => {
   const result = await db
     .selectFrom(DESTINATION_TABLE)
     .select(db.fn.count<string>("idvisit").distinct().as("count"))
-    .where(sql`date(action_timestamp at time zone 'UTC')`, "=", date)
-    //`date("${date}")`)
+    // UTC to be iso with matomo matomo data
+    .where(sql`date(timezone('UTC', action_timestamp))`, "=", date)
     .executeTakeFirst();
-  console.log("result", result);
-  return (result && parseInt(result.count)) || 0;
+  // start at previous visit in case action didnt finished to record
+  return (result && parseInt(result.count) - 1) || 0;
 };
 
+/** import all event from givent date */
 export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): Promise<any> => {
   const limit = parseInt(RESULTPERPAGE);
   const offset = filterOffset || (await getRecordsCount(isoDate(date)));
-  console.log("offset", offset);
   if (!offset) {
     debug(`${isoDate(date)}: load ${limit} visits`);
   } else {
@@ -72,8 +60,12 @@ export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): P
 
   debug(`fetched ${visits.length} visits`);
 
-  // flatten events
-  const allEvents = visits.flatMap(getEventsFromMatomoVisit);
+  // flatten all events
+  const eventsFromVisits = visits.flatMap(getEventsFromMatomoVisit);
+
+  const allEvents = eventsFromVisits.filter(
+    (event) => true //event.action_timestamp && isoDate(new Date(event.action_timestamp)) === isoDate(date)
+  );
 
   if (!allEvents.length) {
     debug(`no more valid events after ${isoDate(date)}`);
@@ -90,7 +82,7 @@ export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): P
 
   // continue to next page if necessary
   if (visits.length === limit) {
-    const nextOffset = +offset + +limit;
+    const nextOffset = offset + limit;
     const nextEvents = await importDate(piwikApi, date, nextOffset);
     return [...importedEvents, ...(nextEvents || [])];
   }

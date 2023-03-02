@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const run = require("../src/index");
+const { default: run } = require("../dist/index");
 
 if (require.main === module) {
   const date =

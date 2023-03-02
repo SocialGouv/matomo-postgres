@@ -16,16 +16,16 @@ npx @socialgouv/matomo-postgres
 
 ### Environment variables Deployment
 
-| name              | value                                          |
-| ----------------- | ---------------------------------------------- |
-| MATOMO_KEY\*      | matomo api token                               |
-| MATOMO_SITE\*     | matomo site id                                 |
-| MATOMO_URL\*      | matomo url                                     |
-| PGDATABASE\*      | Postgres connection string                     |
-| DESTINATION_TABLE | `matomo`                                       |
-| STARTDATE         | default to today()                             |
-| RESULTPERPAGE     | matomo pagination : `100`                      |
-| OFFSET            | default days to check in the past; default = 3 |
+| name              | value                                                    |
+| ----------------- | -------------------------------------------------------- |
+| MATOMO_KEY\*      | matomo api token                                         |
+| MATOMO_SITE\*     | matomo site id                                           |
+| MATOMO_URL\*      | matomo url                                               |
+| PGDATABASE\*      | Postgres connection string                               |
+| DESTINATION_TABLE | `matomo`                                                 |
+| STARTDATE         | default to today()                                       |
+| RESULTPERPAGE     | matomo pagination (defaults to 500)                      |
+| INITIAL_OFFSET    | How many days to fetch on initialisation (defaults to 3) |
 
 ## Dev
 
@@ -43,3 +43,6 @@ yarn start
 
 Use `yarn test -u` to update the snapshots
 
+## Database migrations
+
+`yarn migrate` is run on each `yarn start` with Kysely migrations at [./src/migrations](./src/migrations/)

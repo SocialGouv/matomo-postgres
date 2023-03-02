@@ -6,26 +6,19 @@ import startDebug from "debug";
 
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
 import PiwikClient from "piwik-client";
-//const { Client } from "pg";
+
 import { Database, db } from "./db";
 
-import { MATOMO_KEY, MATOMO_URL, MATOMO_SITE, PGDATABASE, DESTINATION_TABLE, OFFSET } from "./config";
+import { MATOMO_KEY, MATOMO_URL, MATOMO_SITE, PGDATABASE, DESTINATION_TABLE, INITIAL_OFFSET } from "./config";
 
-//const { createTable } = require("./createTable");
 import { importDate } from "./importDate";
 
 const debug = startDebug("index");
 
 async function run(date?: string) {
   debug("run, date=" + date);
-  //const client = db
-  //const client = new Client({ connectionString: PGDATABASE });
-  //await client.connect();
 
   const piwik = new PiwikClient(MATOMO_URL, MATOMO_KEY);
-
-  // todo
-  //await createTable(client);
 
   // priority:
   //  - optional parameter date
@@ -37,10 +30,7 @@ async function run(date?: string) {
   if (!referenceDate && date) referenceDate = new Date(date);
   if (!referenceDate) referenceDate = await findLastEventInMatomo(db);
   if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
-  if (!referenceDate) referenceDate = new Date(new Date().getTime() - +OFFSET * 24 * 60 * 60 * 1000);
-
-  // debug(`import : reference date : ${referenceDate}`);
-  // return;
+  if (!referenceDate) referenceDate = new Date(new Date().getTime() - +INITIAL_OFFSET * 24 * 60 * 60 * 1000);
 
   const dates = eachDayOfInterval({
     start: referenceDate,
@@ -82,8 +72,10 @@ async function findLastEventInMatomo(db: Kysely<Database>) {
     .executeTakeFirst();
 
   if (latest) {
-    const date = new Date(latest.action_timestamp);
-    return new Date(date.getTime() - +OFFSET * 24 * 60 * 60 * 1000);
+    // check from the day before just to be sure we haev all events
+    const date = new Date(new Date(latest.action_timestamp).getTime() - 2 * 24 * 60 * 60 * 1000);
+
+    return date;
   }
 
   return null;

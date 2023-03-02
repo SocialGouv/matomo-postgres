@@ -1,3 +1,4 @@
+import { InsertResult } from "kysely";
 import { Client } from "pg";
 import { ActionDetail, Visit } from "types/matomo-api";
 
@@ -11,14 +12,12 @@ import { Database, db } from "./db";
  *
  * @return {Promise<Record<"rows", any[]>>}
  */
-export const importEvent = (event: any) =>
+export const importEvent = (event: MatomoActionDetail): Promise<InsertResult[]> =>
+  // @ts-ignore // TODO
   db
     .insertInto(DESTINATION_TABLE)
-    .values(event)
-    .onConflict((oc) => {
-      console.error("warning : event skipped (conflict)");
-      return oc.doNothing();
-    })
+    .values([{ ...event }])
+    .onConflict((oc) => oc.doNothing())
     .execute();
 
 const matomoProps = [
@@ -39,7 +38,7 @@ const matomoProps = [
   "referrerName",
   "siteName",
   "userId",
-];
+] as const;
 
 /** @type Record<string, (a: import("types/matomo-api").ActionDetail) => string | number> */
 const actionProps = {
@@ -55,10 +54,9 @@ const actionProps = {
   sitesearchkeyword: (action: ActionDetail) => action.siteSearchKeyword,
 };
 
-export const getEventsFromMatomoVisit = (matomoVisit: Visit) => {
+export const getEventsFromMatomoVisit = (matomoVisit: Visit): MatomoActionDetail[] => {
   return matomoVisit.actionDetails.map((actionDetail, actionIndex) => {
-    /** @type {Record<string, string>} */
-    const usercustomproperties = {};
+    const usercustomproperties: Record<string, any> = {};
     for (let k = 1; k < 10; k++) {
       const property = actionDetail.customVariables && actionDetail.customVariables[k];
       if (!property) continue; // max 10 custom variables
@@ -79,14 +77,18 @@ export const getEventsFromMatomoVisit = (matomoVisit: Visit) => {
 
     const event = {
       // default matomo visit properties
-      //@ts-ignore
       ...matomoProps.reduce((a, prop) => ({ ...a, [prop.toLowerCase()]: matomoVisit[prop] }), {}),
       serverdateprettyfirstaction: new Date((matomoVisit.firstActionTimestamp || 0) * 1000).toISOString(),
       // action specific properties
-      //@ts-ignore
-      ...Object.keys(actionProps).reduce((a, prop) => ({ ...a, [prop]: actionProps[prop](actionDetail) }), {
-        action_id: `${matomoVisit.idVisit}_${actionIndex}`,
-      }),
+      ...Object.keys(actionProps).reduce(
+        (a, prop) => ({
+          ...a,
+          [prop.toLowerCase()]: actionProps[prop as ActionPropsKeys](actionDetail),
+        }),
+        {
+          action_id: `${matomoVisit.idVisit}_${actionIndex}`,
+        }
+      ),
       // custom variables
       usercustomproperties,
       // custom dimensions
@@ -98,3 +100,29 @@ export const getEventsFromMatomoVisit = (matomoVisit: Visit) => {
     return event;
   });
 };
+
+type ActionPropsKeys = keyof typeof actionProps;
+
+type AllMatomoActionDetailKeys =
+  | Lowercase<typeof matomoProps[number]>
+  | Lowercase<ActionPropsKeys>
+  | "dimension1"
+  | "dimension2"
+  | "dimension3"
+  | "dimension4"
+  | "dimension5"
+  | "dimension6"
+  | "dimension7"
+  | "dimension8"
+  | "dimension9"
+  | "dimension10"
+  | "action_id"
+  | "usercustomproperties"
+  | "usercustomdimensions"
+  | "serverdateprettyfirstaction";
+
+type MatomoActionDetail = Partial<
+  Record<AllMatomoActionDetailKeys, string> & { usercustomproperties: any } & {
+    usercustomdimensions: any;
+  }
+>;

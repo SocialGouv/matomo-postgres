@@ -5,5 +5,5 @@ export const MATOMO_URL = process.env.MATOMO_URL || "https://matomo.fabrique.soc
 export const MATOMO_SITE = process.env.MATOMO_SITE || 0;
 export const PGDATABASE = process.env.PGDATABASE || "";
 export const DESTINATION_TABLE: MatomoTableName = process.env.DESTINATION_TABLE || "matomo";
-export const OFFSET = process.env.OFFSET || "3";
+export const INITIAL_OFFSET = process.env.INITIAL_OFFSET || "3";
 export const RESULTPERPAGE = process.env.RESULTPERPAGE || "500";

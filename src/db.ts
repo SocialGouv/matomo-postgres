@@ -1,7 +1,10 @@
 import { Pool } from "pg";
 import { Kysely, PostgresDialect } from "kysely";
-import { MatomoTable, MatomoTableName } from "types";
-const { PGDATABASE } = require("./config");
+import { MatomoTable } from "types";
+import startDebug from "debug";
+import { PGDATABASE } from "./config";
+
+const debug = startDebug("db");
 
 export interface Database {
   [key: string]: MatomoTable;
@@ -15,8 +18,8 @@ export const db = new Kysely<Database>({
   }),
   log(event) {
     if (event.level === "query") {
-      //  console.log(event.query.sql);
-      //console.log(event.query.parameters);
+      // debug(event.query.sql);
+      // debug(event.query.parameters);
     }
   },
 });
