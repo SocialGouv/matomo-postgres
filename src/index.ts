@@ -34,7 +34,7 @@ async function run(date?: string) {
 
   const dates = eachDayOfInterval({
     start: referenceDate,
-    end: new Date(),
+    end: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   });
 
   debug(`import starting at : ${dates[0].toISOString()}`);

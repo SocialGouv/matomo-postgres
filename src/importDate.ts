@@ -1,13 +1,11 @@
-import { Client } from "pg";
 import pAll from "p-all";
 import startDebug from "debug";
 import formatISO from "date-fns/formatISO";
-import { Database, db } from "./db";
 import { sql } from "kysely";
-import { Visits } from "../types/matomo-api";
 
+import { db } from "./db";
+import { Visit, Visits } from "../types/matomo-api";
 import { importEvent, getEventsFromMatomoVisit } from "./importEvent";
-
 import { RESULTPERPAGE, MATOMO_SITE, DESTINATION_TABLE } from "./config";
 
 const debug = startDebug("importDate");
@@ -24,7 +22,8 @@ const getRecordsCount = async (date: string): Promise<number> => {
     .where(sql`date(timezone('UTC', action_timestamp))`, "=", date)
     .executeTakeFirst();
   // start at previous visit in case action didnt finished to record
-  return (result && parseInt(result.count) - 1) || 0;
+  const count = Math.max(0, (result && parseInt(result.count) - 1) || 0);
+  return count;
 };
 
 /** import all event from givent date */
@@ -36,6 +35,7 @@ export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): P
   } else {
     debug(`${isoDate(date)}: load ${limit} more visits after ${offset}`);
   }
+
   // fetch visits details
   const visits: Visits = await new Promise((resolve) =>
     piwikApi(
@@ -48,12 +48,12 @@ export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): P
         filter_sort_order: "asc",
         idSite: MATOMO_SITE,
       },
-      (err: Error, responseObject = []) => {
+      (err: Error, visits: Visit[] = []) => {
         if (err) {
           console.error("err", err);
           resolve([]);
         }
-        return resolve(responseObject || []);
+        return resolve(visits);
       }
     )
   );
@@ -63,9 +63,9 @@ export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): P
   // flatten all events
   const eventsFromVisits = visits.flatMap(getEventsFromMatomoVisit);
 
-  const allEvents = eventsFromVisits.filter(
-    (event) => true //event.action_timestamp && isoDate(new Date(event.action_timestamp)) === isoDate(date)
-  );
+  const allEvents = eventsFromVisits.filter((event) => {
+    return true;
+  });
 
   if (!allEvents.length) {
     debug(`no more valid events after ${isoDate(date)}`);

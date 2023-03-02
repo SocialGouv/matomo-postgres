@@ -24,4 +24,6 @@ jobs:
       #   run: yarn lint
 
       - name: Unit tests
-        run: yarn test
+        run: |
+          yarn build
+          yarn test

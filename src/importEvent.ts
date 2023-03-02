@@ -1,9 +1,8 @@
 import { InsertResult } from "kysely";
-import { Client } from "pg";
 import { ActionDetail, Visit } from "types/matomo-api";
 
 import { DESTINATION_TABLE } from "./config";
-import { Database, db } from "./db";
+import { db } from "./db";
 
 /**
  *
