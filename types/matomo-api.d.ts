@@ -4,7 +4,7 @@ export type Visit = {
   idSite: string;
   idVisit: string;
   visitIp: any;
-  visitorId: boolean;
+  visitorId: string;
   fingerprint: boolean;
   actionDetails: ActionDetail[];
   goalConversions: number;
@@ -149,7 +149,7 @@ export interface ActionDetail {
   timeSpentPretty?: string;
   eventName?: string;
   eventValue?: number;
-  revenue: any;
+  revenue?: any;
   items?: string;
   itemDetails?: ItemDetail[];
   customVariables?: CustomVariables;

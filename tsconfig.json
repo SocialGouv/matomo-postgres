@@ -4,11 +4,12 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "moduleResolution": "node",
     "module": "CommonJS",
     "target": "ES2015",
+    "types": ["node", "jest"],
     "strict": true
   },
-  "include": ["src/**/*", "types/**/*"],
-  "exclude": ["src/__tests__/*"]
+  "include": ["src/**/*", "types/**/*"]
 }
