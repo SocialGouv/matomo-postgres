@@ -4,8 +4,6 @@
 
 Extract matomo data from [`Live.getLastVisitsDetails`](https://developer.matomo.org/api-reference/reporting-api) API and push events and visits informations to Postgres.
 
-Use [pg_partman](https://github.com/pgpartman/pg_partman) to partition data by month.
-
 ## Usage
 
 Create the [initial table](./initial.sql) database table then run the following job with correct environment variables.
