@@ -2,6 +2,7 @@ import * as path from "path";
 import { promises as fs } from "fs";
 import { Migrator, FileMigrationProvider } from "kysely";
 import { db } from "./db";
+import { DESTINATION_TABLE } from "./config";
 
 async function migrateToLatest() {
   const extension = await db
@@ -24,6 +25,9 @@ async function migrateToLatest() {
       path,
       migrationFolder: __dirname + "/migrations",
     }),
+    // allow to have mutliple migratable instances in a single schema
+    migrationTableName: `${DESTINATION_TABLE}_migration`,
+    migrationLockTableName: `${DESTINATION_TABLE}_migration_lock`,
   });
 
   const { error, results } = await migrator.migrateToLatest();
