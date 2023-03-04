@@ -6,6 +6,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createTable(DESTINATION_TABLE)
     .ifNotExists()
+    .addColumn("action_id", "text", (col) => col.unique().notNull())
     .addColumn("idsite", "text")
     .addColumn("idvisit", "text")
     .addColumn("actions", "text")
@@ -21,7 +22,6 @@ export async function up(db: Kysely<any>): Promise<void> {
     .addColumn("sitename", "text")
     .addColumn("userid", "text")
     .addColumn("serverdateprettyfirstaction", "date")
-    .addColumn("action_id", "text")
     .addColumn("action_type", "text")
     .addColumn("action_eventcategory", "text")
     .addColumn("action_eventaction", "text")
