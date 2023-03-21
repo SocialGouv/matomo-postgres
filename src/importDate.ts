@@ -43,10 +43,10 @@ export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): P
         method: "Live.getLastVisitsDetails",
         period: "day",
         date: isoDate(date),
-        minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
+        // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
         filter_limit: limit,
         filter_offset: offset,
-        filter_sort_order: "desc",
+        filter_sort_order: "asc",
         idSite: MATOMO_SITE,
       },
       (err: Error, visits: Visit[] = []) => {
