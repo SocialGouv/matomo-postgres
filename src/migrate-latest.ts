@@ -13,11 +13,6 @@ async function migrateToLatest() {
     .where("extname", "=", "pg_partman")
     .executeTakeFirst();
 
-  if (extension) {
-    console.error("pg_partman extension detected; Skip migrations");
-    return;
-  }
-
   const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({
