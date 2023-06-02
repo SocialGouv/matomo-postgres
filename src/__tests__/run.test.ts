@@ -64,7 +64,6 @@ jest.mock("piwik-client", () => {
     api(options: any, cb: Function) {
       piwikApiCalls.push(options);
       cb(null, matomoVisits);
-      ("");
     }
   }
 
