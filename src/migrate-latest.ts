@@ -5,14 +5,6 @@ import { db } from "./db";
 import { DESTINATION_TABLE } from "./config";
 
 async function migrateToLatest() {
-  const extension = await db
-    .selectFrom("pg_extension")
-    //@ts-ignore
-    .select("extname")
-    //@ts-ignore
-    .where("extname", "=", "pg_partman")
-    .executeTakeFirst();
-
   const migrator = new Migrator({
     db,
     provider: new FileMigrationProvider({
@@ -44,8 +36,15 @@ async function migrateToLatest() {
       console.log("No migration to run");
     }
   }
+}
 
+export default migrateToLatest;
+
+async function start() {
+  await migrateToLatest();
   await db.destroy();
 }
 
-migrateToLatest();
+if (require.main === module) {
+  start();
+}

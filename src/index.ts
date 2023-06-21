@@ -47,6 +47,8 @@ async function run(date?: string) {
 
   debug("close");
 
+  db.destroy();
+
   return res;
 }
 
