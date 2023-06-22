@@ -6,7 +6,7 @@ Extract matomo data from [`Live.getLastVisitsDetails`](https://developer.matomo.
 
 ## Usage
 
-Create the [initial table](./initial.sql) database table then run the following job with correct environment variables.
+Run the following job with correct environment variables.
 
 ```sh
 npx @socialgouv/matomo-postgres
