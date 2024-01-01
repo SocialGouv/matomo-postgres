@@ -27,7 +27,7 @@
     "printWidth": 120
   },
   "dependencies": {
-    "date-fns": "^2.29.3",
+    "date-fns": "^3.0.0",
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",
     "kysely": "^0.23.4",
