@@ -1,16 +1,10 @@
 #!/usr/bin/env node
 
-const { db } = require("../dist/db");
-
 const { default: run } = require("../dist/index");
-const { default: migrate } = require("../dist/migrate-latest");
 
 async function start(date) {
-  console.log(`\nRunning migrations\n`);
-  await migrate();
   console.log(`\nStarting import\n`);
   await run(date);
-  db.destroy();
 }
 
 if (require.main === module) {

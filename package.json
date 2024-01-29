@@ -10,27 +10,28 @@
     "access": "public"
   },
   "bin": {
-    "matomo-postgres": "./bin/index.js"
+    "matomo-mongodb": "./bin/index.js"
   },
   "files": [
     "bin",
     "dist"
   ],
   "scripts": {
-    "start": "yarn migrate && node ./dist/index.js",
+    "start": "node ./dist/index.js",
     "build": "tsc",
     "prepublish": "yarn build",
-    "migrate": "node ./dist/migrate-latest.js",
     "test": "jest --verbose"
   },
   "prettier": {
     "printWidth": 120
   },
   "dependencies": {
+    "@types/lodash": "^4.14.202",
     "date-fns": "^2.29.3",
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",
-    "kysely": "^0.23.4",
+    "lodash": "^4.17.21",
+    "mongodb": "^6.3.0",
     "p-all": "^3",
     "pg": "^8.9.0",
     "piwik-client": "^0.2.2"

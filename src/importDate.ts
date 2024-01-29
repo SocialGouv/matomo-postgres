@@ -1,96 +1,73 @@
-import pAll from "p-all";
 import startDebug from "debug";
 import formatISO from "date-fns/formatISO";
-import { sql } from "kysely";
 
-import { db } from "./db";
-import { Visit, Visits } from "../types/matomo-api";
-import { importEvent, getEventsFromMatomoVisit } from "./importEvent";
-import { RESULTPERPAGE, MATOMO_SITE, DESTINATION_TABLE } from "./config";
+import { RESULTPERPAGE, MATOMO_SITE } from "./config";
 
 const debug = startDebug("importDate");
 
 /** return date as ISO yyyy-mm-dd */
 const isoDate = (date: Date) => formatISO(date, { representation: "date" });
 
-/** check how many visits complete for a given date */
-const getRecordsCount = async (date: string): Promise<number> => {
-  const result = await db
-    .selectFrom(DESTINATION_TABLE)
-    .select(db.fn.count<string>("idvisit").distinct().as("count"))
-    // UTC to be iso with matomo matomo data
-    .where(sql`date(timezone('UTC', action_timestamp))`, "=", date)
-    .executeTakeFirst();
-  // start at previous visit in case action didnt finished to record
-  const count = Math.max(0, (result && parseInt(result.count) - 1) || 0);
-  return count;
-};
-
 /** import all event from givent date */
 export const importDate = async (piwikApi: any, date: Date, filterOffset = 0): Promise<any> => {
   const limit = parseInt(RESULTPERPAGE);
-  const offset = filterOffset || (await getRecordsCount(isoDate(date)));
+  const offset = filterOffset;
   if (!offset) {
     debug(`${isoDate(date)}: load ${limit} visits`);
   } else {
     debug(`${isoDate(date)}: load ${limit} more visits after ${offset}`);
   }
 
-  // fetch visits details
-  const visits: Visits = await new Promise((resolve) =>
-    piwikApi(
-      {
-        method: "Live.getLastVisitsDetails",
-        period: "day",
-        date: isoDate(date),
-        // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
-        filter_limit: limit,
-        filter_offset: offset,
-        filter_sort_order: "asc",
-        idSite: MATOMO_SITE,
-      },
-      (err: Error, visits: Visit[] = []) => {
-        if (err) {
-          console.error("err", err);
-          resolve([]);
-        }
-        return resolve(visits);
-      }
-    )
-  );
+  console.log(date);
 
-  debug(`fetched ${visits.length} visits`);
+  const methods = [
+    "Events.getCategory",
+    "Events.getAction",
+    "Events.getName",
+    "DevicesDetection.getType",
+    "DevicesDetection.getOsFamilies",
+    "DevicesDetection.getOsVersions",
+    "DevicesDetection.getBrowsers",
+    "DevicesDetection.getBrowserVersions",
+    "DevicesDetection.getBrowserEngines",
+    "Insights.getInsightsOverview",
+    "Referrers.getAll",
+    "UserId.getUsers",
+    "Actions.getPageUrls",
+    "Actions.getEntryPageUrls",
+    "Actions.getExitPageUrls",
+    "Actions.getOutlinks",
+  ]
+  const result: Record<string, unknown> = {};
+  for( let method of methods) {
+      const methodResult = await new Promise((resolve) =>
+        piwikApi(
+          {
+            method,
+            period: "day",
+            date: isoDate(date),
+            // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
+            filter_limit: limit,
+            filter_offset: offset,
+            filter_sort_order: "asc",
+            idSite: MATOMO_SITE,
+          },
+          (err: Error, result: Record<string, unknown>[] = []) => {
+            if (err) {
+              console.error("err", err);
+              resolve([]);
+            }
+            if (Array.isArray(result)) result.forEach(v => v.date = date);
+            else (result as Record<string, unknown>).date = date;
+            resolve(result);
+          }
+        )
+    );
 
-  // flatten all events
-  const eventsFromVisits = visits.flatMap(getEventsFromMatomoVisit);
-
-  const allEvents = eventsFromVisits.filter((event) => {
-    return true;
-  });
-
-  if (!allEvents.length) {
-    debug(`no more valid events after ${isoDate(date)}`);
-    return [];
+    result[method] = methodResult;
   }
 
-  debug(`import ${allEvents.length} events`);
-
-  // serial-import events into PG
-  const importedEvents = await pAll(
-    allEvents.map((event: any) => () => importEvent(event)),
-    { concurrency: 10, stopOnError: true }
-  );
-
-  // continue to next page if necessary
-  if (visits.length === limit) {
-    const nextOffset = offset + limit;
-    const nextEvents = await importDate(piwikApi, date, nextOffset);
-    return [...importedEvents, ...(nextEvents || [])];
-  }
-
-  debug(`finished importing ${isoDate(date)}, offset ${offset}`);
-
-  return importedEvents || [];
+  return result;
 };
 
 module.exports = { importDate };
