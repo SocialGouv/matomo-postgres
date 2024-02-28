@@ -14,6 +14,9 @@ export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
     pool: new Pool({
       connectionString: PGDATABASE,
+      ssl: {
+        rejectUnauthorized: false,
+      }
     }),
   }),
   log(event) {
