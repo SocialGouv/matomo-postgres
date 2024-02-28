@@ -7,6 +7,7 @@ const { default: migrate } = require("../dist/migrate-latest");
 
 async function start(date) {
   console.log(`\nRunning migrations\n`);
+  console.log(`\nTEST\n`);
   await migrate();
   console.log(`\nStarting import\n`);
   await run(date);
