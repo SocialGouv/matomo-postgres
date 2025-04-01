@@ -5,7 +5,7 @@ import pAll from "p-all";
 import startDebug from "debug";
 
 import eachDayOfInterval from "date-fns/eachDayOfInterval";
-import PiwikClient from "piwik-client";
+import PiwikClient from "./PiwikClient";
 
 import { Database, db } from "./db";
 

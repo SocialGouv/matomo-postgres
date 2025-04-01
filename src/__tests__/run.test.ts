@@ -45,7 +45,7 @@ afterEach(() => {
 
 let piwikApiCalls: any[] = [];
 
-jest.mock("piwik-client", () => {
+jest.mock("../PiwikClient", () => {
   const matomoVisits = [
     {
       ...matomoVisit,
