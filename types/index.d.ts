@@ -21,6 +21,7 @@ export interface MatomoTable {
   visitortype?: string;
   sitename?: string;
   userid?: string;
+  resolution?: string;
   serverdateprettyfirstaction?: ColumnType<Date>;
   action_id: string;
   action_type: string;

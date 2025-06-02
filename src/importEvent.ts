@@ -37,6 +37,7 @@ const matomoProps = [
   "referrerName",
   "siteName",
   "userId",
+  "resolution",
 ] as const;
 
 /** @type Record<string, (a: import("types/matomo-api").ActionDetail) => string | number> */
@@ -103,7 +104,7 @@ export const getEventsFromMatomoVisit = (matomoVisit: Visit): MatomoActionDetail
 type ActionPropsKeys = keyof typeof actionProps;
 
 type AllMatomoActionDetailKeys =
-  | Lowercase<typeof matomoProps[number]>
+  | Lowercase<(typeof matomoProps)[number]>
   | Lowercase<ActionPropsKeys>
   | "dimension1"
   | "dimension2"
