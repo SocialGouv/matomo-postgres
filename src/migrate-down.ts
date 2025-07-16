@@ -1,8 +1,12 @@
 import { promises as fs } from 'fs'
 import { FileMigrationProvider, Migrator } from 'kysely'
 import * as path from 'path'
+import { fileURLToPath } from 'url'
 
-import { db } from './db'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+import { db } from './db.js'
 
 async function migrateDown() {
   const migrator = new Migrator({

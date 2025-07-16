@@ -1,11 +1,13 @@
+// Set environment variables BEFORE any imports
+process.env.MATOMO_SITE = '42'
+process.env.PROJECT_NAME = 'some-project'
+process.env.RESULTPERPAGE = '10'
+process.env.DESTINATION_TABLE = 'matomo'
+
 import { Pool } from 'pg'
 
 import { importDate } from '../importDate'
 import matomoVisit from './visit.json'
-
-process.env.MATOMO_SITE = '42'
-process.env.PROJECT_NAME = 'some-project'
-process.env.RESULTPERPAGE = '10'
 
 const TEST_DATE = new Date(2023, 3, 15)
 

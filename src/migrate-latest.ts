@@ -1,9 +1,13 @@
 import { promises as fs } from 'fs'
 import { FileMigrationProvider, Migrator } from 'kysely'
 import * as path from 'path'
+import { fileURLToPath } from 'url'
 
-import { DESTINATION_TABLE } from './config'
-import { db } from './db'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+import { MATOMO_TABLE_NAME } from './config.js'
+import { db } from './db.js'
 
 async function migrateToLatest() {
   const migrator = new Migrator({
@@ -14,8 +18,8 @@ async function migrateToLatest() {
       migrationFolder: __dirname + '/migrations'
     }),
     // allow to have mutliple migratable instances in a single schema
-    migrationTableName: `${DESTINATION_TABLE}_migration`,
-    migrationLockTableName: `${DESTINATION_TABLE}_migration_lock`
+    migrationTableName: `${MATOMO_TABLE_NAME}_migration`,
+    migrationLockTableName: `${MATOMO_TABLE_NAME}_migration_lock`
   })
 
   const { error, results } = await migrator.migrateToLatest()
@@ -46,6 +50,4 @@ async function start() {
   await db.destroy()
 }
 
-if (require.main === module) {
-  start()
-}
+start()

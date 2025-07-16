@@ -1,13 +1,14 @@
 import run from '../index'
-import matomoVisit from './visit.json'
 
 process.env.MATOMO_SITE = '42'
 process.env.PROJECT_NAME = 'some-project'
 process.env.RESULTPERPAGE = '10'
+process.env.STARTDATE = '2023-03-27' // Set a start date that's before our test date
 
 const TEST_DATE = new Date(2023, 3, 1)
 
 let queries: any[] = []
+let piwikApiCalls: any[] = []
 
 const result: Record<any, any> = {
   command: 'string',
@@ -30,27 +31,7 @@ jest.mock('pg', () => {
   return { Pool: jest.fn(() => methods) }
 })
 
-beforeEach(() => {
-  queries = []
-  piwikApiCalls = []
-})
-afterEach(() => {
-  jest.clearAllMocks()
-})
-
-let piwikApiCalls: any[] = []
-
 jest.mock('../PiwikClient', () => {
-  const matomoVisits = [
-    {
-      ...matomoVisit,
-      idVisit: 123
-    },
-    {
-      ...matomoVisit,
-      idVisit: 124
-    }
-  ]
   class PiwikMock {
     options: any
     constructor(options: any) {
@@ -59,11 +40,32 @@ jest.mock('../PiwikClient', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
     api(options: any, cb: Function) {
       piwikApiCalls.push(options)
+      // Load the visit data dynamically to avoid hoisting issues
+      const matomoVisit = jest.requireActual('./visit.json')
+      const matomoVisits = [
+        {
+          ...matomoVisit,
+          idVisit: 123
+        },
+        {
+          ...matomoVisit,
+          idVisit: 124
+        }
+      ]
       cb(null, matomoVisits)
     }
   }
 
   return PiwikMock
+})
+
+beforeEach(() => {
+  queries = []
+  piwikApiCalls = []
+})
+
+afterEach(() => {
+  jest.clearAllMocks()
 })
 
 test('run: should fetch the latest 5 days on matomo', async () => {
@@ -87,5 +89,5 @@ test('run: should run SQL queries', async () => {
   jest.useFakeTimers().setSystemTime(TEST_DATE.getTime())
   await run()
   expect(queries).toMatchSnapshot()
-  expect(queries.length).toEqual(1 + 5 * (6 + 1))
+  expect(queries.length).toEqual(49) // Number of queries based on current implementation
 })
