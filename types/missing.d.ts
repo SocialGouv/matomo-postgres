@@ -1,1 +1,1 @@
-declare module "piwik-client";
+declare module 'piwik-client'

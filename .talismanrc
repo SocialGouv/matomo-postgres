@@ -1,4 +1,18 @@
 fileignoreconfig:
+- filename: src/PiwikClient.ts
+  checksum: 81720222b10ca7b7a6073ad778d3a6d78404da1c264164c35966071bcd4bd9b7
+- filename: src/config.ts
+  checksum: 8dc9029156f81857edb2ce9d4659467a82f32bf3e4cd3c2c58716677f100eeb5
+- filename: src/db.ts
+  checksum: 5bac048e3b1a19ab6089c79fde82ca05eb03365cfa12917420675ba499c82e0b
+- filename: src/importEvent.ts
+  checksum: 1d2af26162f374fcae4ecb79c5860e06a00d76f8890b07b509a06866ed6dc43d
 - filename: src/index.ts
   checksum: b15e1f7936a1efb1a7b354dc91d451f68e5c933a847f2a878a0aacf188944418
+- filename: src/migrations/20230301-01-initial.ts
+  checksum: 7a69e1a45bea95234850c197a56d074aa76e557eecdbc18374aebe4cdffd1ffe
+- filename: types/matomo-api.d.ts
+  checksum: d444b6978911a1a38b4f3dfef2bf58d04583a4a16ce04a062c2a21b256b2e3cb
+- filename: yarn.lock
+  checksum: d2961db8851e56ef7f58525390d4ffe957efcac684a36a6a5f96b935300e71d2
 version: "1.0"
