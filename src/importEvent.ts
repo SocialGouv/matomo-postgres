@@ -1,43 +1,68 @@
-import { InsertResult } from 'kysely'
+import { sql } from 'kysely'
 import { ActionDetail, Visit } from 'types/matomo-api'
 
-import { DESTINATION_TABLE } from './config'
-import { db } from './db'
+import { db } from './db.js'
 
 /**
  *
  * @param {Client} client
  * @param {import("types").Event} event
  *
- * @return {Promise<Record<"rows", any[]>>}
+ * @return {Promise<void>}
  */
-export const importEvent = (
-  event: MatomoActionDetail
-): Promise<InsertResult[]> =>
-  db
-    .insertInto(DESTINATION_TABLE)
-    .values({
-      ...event,
-      idsite: event.idsite ?? '',
-      idvisit: event.idvisit ?? '',
-      action_type: event.action_type ?? '',
-      action_eventcategory: event.action_eventcategory ?? '',
-      action_eventaction: event.action_eventaction ?? '',
-      action_eventname: event.action_eventname ?? '',
-      action_id: event.action_id ?? '',
-      action_eventvalue: event.action_eventvalue
-        ? Number(event.action_eventvalue)
-        : 0,
-      action_timespent: event.action_timespent ?? '0',
-      action_timestamp: event.action_timestamp
-        ? new Date(event.action_timestamp)
-        : new Date(),
-      serverdateprettyfirstaction: event.serverdateprettyfirstaction
-        ? new Date(event.serverdateprettyfirstaction)
-        : new Date()
-    })
-    .onConflict((oc) => oc.doNothing())
-    .execute()
+export const importEvent = async (event: MatomoActionDetail): Promise<void> => {
+  // Use the stored procedure for safe insertion with automatic partition creation
+  await sql`
+    SELECT insert_into_matomo_partitioned(
+      ${event.action_id ?? ''},
+      ${event.action_timestamp ? new Date(event.action_timestamp) : new Date()},
+      ${event.idsite ?? ''},
+      ${event.idvisit ?? ''},
+      ${event.actions ?? null},
+      ${event.country ?? null},
+      ${event.region ?? null},
+      ${event.city ?? null},
+      ${event.operatingsystemname ?? null},
+      ${event.devicemodel ?? null},
+      ${event.devicebrand ?? null},
+      ${event.visitduration ?? null},
+      ${event.dayssincefirstvisit ?? null},
+      ${event.visitortype ?? null},
+      ${event.sitename ?? null},
+      ${event.userid ?? null},
+      ${
+        event.serverdateprettyfirstaction
+          ? new Date(event.serverdateprettyfirstaction)
+          : null
+      },
+      ${event.action_type ?? ''},
+      ${event.action_eventcategory ?? ''},
+      ${event.action_eventaction ?? ''},
+      ${event.action_eventname ?? ''},
+      ${event.action_eventvalue ? Number(event.action_eventvalue) : 0},
+      ${event.action_timespent ?? '0'},
+      ${event.usercustomproperties ?? null},
+      ${event.usercustomdimensions ?? null},
+      ${event.dimension1 ?? null},
+      ${event.dimension2 ?? null},
+      ${event.dimension3 ?? null},
+      ${event.dimension4 ?? null},
+      ${event.dimension5 ?? null},
+      ${event.dimension6 ?? null},
+      ${event.dimension7 ?? null},
+      ${event.dimension8 ?? null},
+      ${event.dimension9 ?? null},
+      ${event.dimension10 ?? null},
+      ${event.action_url ?? null},
+      ${event.sitesearchkeyword ?? null},
+      ${event.action_title ?? null},
+      ${event.visitorid ?? null},
+      ${event.referrertype ?? null},
+      ${event.referrername ?? null},
+      ${event.resolution ?? null}
+    )
+  `.execute(db)
+}
 
 const matomoProps = [
   'idSite',

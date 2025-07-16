@@ -1,12 +1,12 @@
-import formatISO from 'date-fns/formatISO'
+import { formatISO } from 'date-fns'
 import startDebug from 'debug'
 import { sql } from 'kysely'
 import pAll from 'p-all'
 
 import { Visit, Visits } from '../types/matomo-api'
-import { DESTINATION_TABLE, MATOMO_SITE, RESULTPERPAGE } from './config'
-import { db } from './db'
-import { getEventsFromMatomoVisit, importEvent } from './importEvent'
+import { DESTINATION_TABLE, MATOMO_SITE, RESULTPERPAGE } from './config.js'
+import { db } from './db.js'
+import { getEventsFromMatomoVisit, importEvent } from './importEvent.js'
 
 const debug = startDebug('importDate')
 
@@ -80,7 +80,7 @@ export const importDate = async (
   debug(`import ${allEvents.length} events`)
 
   // serial-import events into PG
-  const importedEvents = await pAll(
+  await pAll(
     allEvents.map((event: any) => () => importEvent(event)),
     { concurrency: 10, stopOnError: true }
   )
@@ -89,12 +89,10 @@ export const importDate = async (
   if (visits.length === limit) {
     const nextOffset = offset + limit
     const nextEvents = await importDate(piwikApi, date, nextOffset)
-    return [...importedEvents, ...(nextEvents || [])]
+    return [...allEvents, ...(nextEvents || [])]
   }
 
   debug(`finished importing ${isoDate(date)}, offset ${offset}`)
 
-  return importedEvents || []
+  return allEvents
 }
-
-module.exports = { importDate }

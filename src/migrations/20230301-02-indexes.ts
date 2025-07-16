@@ -1,6 +1,6 @@
 import { Kysely, sql } from 'kysely'
 
-const DESTINATION_TABLE = process.env.DESTINATION_TABLE || 'matomo'
+const MATOMO_TABLE_NAME = process.env.MATOMO_TABLE_NAME || 'matomo'
 
 const indexes = [
   {
@@ -70,7 +70,7 @@ export async function up(db: Kysely<any>): Promise<void> {
     await db.schema
       .createIndex(index.name)
       .ifNotExists()
-      .on(DESTINATION_TABLE)
+      .on(MATOMO_TABLE_NAME)
       .using('btree')
       .columns(index.columns)
       .execute()
@@ -78,7 +78,7 @@ export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
     .createIndex('actions_day')
     .ifNotExists()
-    .on(DESTINATION_TABLE)
+    .on(MATOMO_TABLE_NAME)
     .expression(sql`date(timezone('UTC', action_timestamp))`)
     .execute()
 }

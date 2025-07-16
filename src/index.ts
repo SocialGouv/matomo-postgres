@@ -1,4 +1,4 @@
-import eachDayOfInterval from 'date-fns/eachDayOfInterval'
+import { eachDayOfInterval } from 'date-fns'
 import startDebug from 'debug'
 import { Kysely, sql } from 'kysely'
 import pAll from 'p-all'
@@ -10,10 +10,10 @@ import {
   MATOMO_SITE,
   MATOMO_URL,
   PGDATABASE
-} from './config'
-import { Database, db } from './db'
-import { importDate } from './importDate'
-import PiwikClient from './PiwikClient'
+} from './config.js'
+import { Database, db } from './db.js'
+import { importDate } from './importDate.js'
+import PiwikClient from './PiwikClient.js'
 
 const debug = startDebug('index')
 
@@ -42,6 +42,13 @@ async function run(date?: string) {
     )
   }
 
+  if (!referenceDate && process.env.STARTDATE) {
+    referenceDate = new Date(process.env.STARTDATE)
+    console.log(
+      `✅ Using STARTDATE environment variable: ${referenceDate.toISOString()}`
+    )
+  }
+
   if (!referenceDate) {
     console.log(`🔍 Looking for last event in database...`)
     referenceDate = await findLastEventInMatomo(db)
@@ -52,13 +59,6 @@ async function run(date?: string) {
     } else {
       console.log(`ℹ️ No previous events found in database`)
     }
-  }
-
-  if (!referenceDate && process.env.STARTDATE) {
-    referenceDate = new Date(process.env.STARTDATE)
-    console.log(
-      `✅ Using STARTDATE environment variable: ${referenceDate.toISOString()}`
-    )
   }
 
   if (!referenceDate) {
@@ -109,7 +109,7 @@ async function run(date?: string) {
 
 export default run
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   ;(async () => {
     if (!MATOMO_SITE) return console.error('Missing env MATOMO_SITE')
     if (!MATOMO_KEY) return console.error('Missing env MATOMO_KEY')
