@@ -9,16 +9,22 @@ import PiwikClient from "./PiwikClient";
 
 import { Database, db } from "./db";
 
-import { MATOMO_KEY, MATOMO_URL, MATOMO_SITE, PGDATABASE, DESTINATION_TABLE, INITIAL_OFFSET } from "./config";
+import { DESTINATION_TABLE, INITIAL_OFFSET, MATOMO_KEY, MATOMO_SITE, MATOMO_URL, PGDATABASE } from "./config";
 
 import { importDate } from "./importDate";
 
 const debug = startDebug("index");
 
 async function run(date?: string) {
+  console.log(`🚀 Starting data import process`);
   debug("run, date=" + date);
 
+  console.log(`🔗 Initializing Matomo client`);
+  console.log(`  - Matomo URL: ${MATOMO_URL}`);
+  console.log(`  - Matomo Site ID: ${MATOMO_SITE}`);
   const piwik = new PiwikClient(MATOMO_URL, MATOMO_KEY);
+
+  console.log(`📅 Determining reference date for import...`);
 
   // priority:
   //  - optional parameter date
@@ -27,23 +33,60 @@ async function run(date?: string) {
   //  - today
 
   let referenceDate;
-  if (!referenceDate && date) referenceDate = new Date(date);
-  if (!referenceDate) referenceDate = await findLastEventInMatomo(db);
-  if (!referenceDate && process.env.STARTDATE) referenceDate = new Date(process.env.STARTDATE);
-  if (!referenceDate) referenceDate = new Date(new Date().getTime() - +INITIAL_OFFSET * 24 * 60 * 60 * 1000);
+  if (!referenceDate && date) {
+    referenceDate = new Date(date);
+    console.log(`✅ Using provided date parameter: ${referenceDate.toISOString()}`);
+  }
 
+  if (!referenceDate) {
+    console.log(`🔍 Looking for last event in database...`);
+    referenceDate = await findLastEventInMatomo(db);
+    if (referenceDate) {
+      console.log(`✅ Found last event, starting from: ${referenceDate.toISOString()}`);
+    } else {
+      console.log(`ℹ️ No previous events found in database`);
+    }
+  }
+
+  if (!referenceDate && process.env.STARTDATE) {
+    referenceDate = new Date(process.env.STARTDATE);
+    console.log(`✅ Using STARTDATE environment variable: ${referenceDate.toISOString()}`);
+  }
+
+  if (!referenceDate) {
+    referenceDate = new Date(new Date().getTime() - +INITIAL_OFFSET * 24 * 60 * 60 * 1000);
+    console.log(`✅ Using default offset (${INITIAL_OFFSET} days ago): ${referenceDate.toISOString()}`);
+  }
+
+  const endDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
   const dates = eachDayOfInterval({
     start: referenceDate,
-    end: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+    end: endDate,
   });
+
+  console.log(`📊 Import date range determined:`);
+  console.log(`  - Start date: ${dates[0].toISOString()}`);
+  console.log(`  - End date: ${endDate.toISOString()}`);
+  console.log(`  - Total days to process: ${dates.length}`);
 
   debug(`import starting at : ${dates[0].toISOString()}`);
 
+  console.log(`🔄 Starting sequential import for each date...`);
+
   // for each date, serial-import data
   const res = await pAll(
-    dates.map((date) => () => importDate(piwik.api.bind(piwik), date)),
+    dates.map((date, index) => () => {
+      console.log(`📅 Processing date ${index + 1}/${dates.length}: ${date.toISOString().split('T')[0]}`);
+      return importDate(piwik.api.bind(piwik), date);
+    }),
     { concurrency: 1, stopOnError: true }
   );
+
+  const totalEvents = res.flat().length;
+  console.log(`✅ Import process completed`);
+  console.log(`📈 Summary:`);
+  console.log(`  - Days processed: ${dates.length}`);
+  console.log(`  - Total events imported: ${totalEvents}`);
 
   debug("close");
 
@@ -72,7 +115,7 @@ async function findLastEventInMatomo(db: Kysely<Database>) {
     .executeTakeFirst();
 
   if (latest) {
-    // check from the day before just to be sure we haev all events
+    // check from the day before just to be sure we have all events
     const date = new Date(new Date(latest.action_timestamp).getTime() - 2 * 24 * 60 * 60 * 1000);
 
     return date;

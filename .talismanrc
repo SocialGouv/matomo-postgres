@@ -1,0 +1,4 @@
+fileignoreconfig:
+- filename: src/index.ts
+  checksum: b15e1f7936a1efb1a7b354dc91d451f68e5c933a847f2a878a0aacf188944418
+version: "1.0"
