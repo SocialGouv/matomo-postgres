@@ -10,7 +10,7 @@ async function migrateDown() {
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: './migrations'
+      migrationFolder: path.resolve(process.cwd(), 'dist/migrations')
     })
   })
 
