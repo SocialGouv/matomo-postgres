@@ -2,11 +2,11 @@
 
 import { db } from '../dist/db.js'
 import run from '../dist/index.js'
-import migrate from '../dist/migrate-latest.js'
+import { startMigration } from '../dist/migrate-latest.js'
 
 async function start(date) {
   console.log(`\nRunning migrations\n`)
-  await migrate()
+  await startMigration()
   console.log(`\nStarting import\n`)
   await run(date)
   db.destroy()
