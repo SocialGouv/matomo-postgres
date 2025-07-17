@@ -50,6 +50,4 @@ async function start() {
   await db.destroy()
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  start()
-}
+start()

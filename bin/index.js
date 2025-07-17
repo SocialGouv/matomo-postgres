@@ -12,11 +12,9 @@ async function start(date) {
   db.destroy()
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const date =
-    (process.argv[process.argv.length - 1].match(/^\d\d\d\d-\d\d-\d\d$/) &&
-      process.argv[process.argv.length - 1]) ||
-    ''
-  console.log(`\nRunning @socialgouv/matomo-postgres ${date}\n`)
-  start(date)
-}
+const date =
+  (process.argv[process.argv.length - 1].match(/^\d\d\d\d-\d\d-\d\d$/) &&
+    process.argv[process.argv.length - 1]) ||
+  ''
+console.log(`\nRunning @socialgouv/matomo-postgres ${date}\n`)
+start(date)

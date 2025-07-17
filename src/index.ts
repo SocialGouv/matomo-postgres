@@ -107,19 +107,6 @@ async function run(date?: string) {
   return res
 }
 
-export default run
-
-if (import.meta.url === `file://${process.argv[1]}`) {
-  ;(async () => {
-    if (!MATOMO_SITE) return console.error('Missing env MATOMO_SITE')
-    if (!MATOMO_KEY) return console.error('Missing env MATOMO_KEY')
-    if (!PGDATABASE) return console.error('Missing env PGDATABASE')
-    await run()
-    debug('run finished')
-    db.destroy()
-  })()
-}
-
 async function findLastEventInMatomo(db: Kysely<Database>) {
   const latest = await db
     .selectFrom(DESTINATION_TABLE)
@@ -141,3 +128,13 @@ async function findLastEventInMatomo(db: Kysely<Database>) {
 
   return null
 }
+
+export default run
+;(async () => {
+  if (!MATOMO_SITE) return console.error('Missing env MATOMO_SITE')
+  if (!MATOMO_KEY) return console.error('Missing env MATOMO_KEY')
+  if (!PGDATABASE) return console.error('Missing env PGDATABASE')
+  await run()
+  debug('run finished')
+  db.destroy()
+})()
