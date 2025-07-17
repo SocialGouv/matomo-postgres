@@ -14,7 +14,10 @@ async function migrateToLatest() {
       provider: new FileMigrationProvider({
         fs,
         path,
-        migrationFolder: path.resolve(process.cwd(), 'dist/migrations')
+        migrationFolder: path.join(
+          path.dirname(new URL(import.meta.url).pathname),
+          'migrations'
+        )
       }),
       // allow to have mutliple migratable instances in a single schema
       migrationTableName: `${MATOMO_TABLE_NAME}_migration`,
