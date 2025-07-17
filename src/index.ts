@@ -8,8 +8,7 @@ import {
   INITIAL_OFFSET,
   MATOMO_KEY,
   MATOMO_SITE,
-  MATOMO_URL,
-  PGDATABASE
+  MATOMO_URL
 } from './config.js'
 import { Database, db } from './db.js'
 import { importDate } from './importDate.js'
@@ -130,11 +129,3 @@ async function findLastEventInMatomo(db: Kysely<Database>) {
 }
 
 export default run
-;(async () => {
-  if (!MATOMO_SITE) return console.error('Missing env MATOMO_SITE')
-  if (!MATOMO_KEY) return console.error('Missing env MATOMO_KEY')
-  if (!PGDATABASE) return console.error('Missing env PGDATABASE')
-  await run()
-  debug('run finished')
-  db.destroy()
-})()
