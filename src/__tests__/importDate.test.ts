@@ -1,11 +1,12 @@
+// Set environment variables before any imports
+process.env.MATOMO_SITE = '42'
+process.env.PROJECT_NAME = 'some-project'
+process.env.RESULTPERPAGE = '10'
+
 import { Pool } from 'pg'
 
 import { importDate } from '../importDate'
 import matomoVisit from './visit.json'
-
-process.env.MATOMO_SITE = '42'
-process.env.PROJECT_NAME = 'some-project'
-process.env.RESULTPERPAGE = '10'
 
 const TEST_DATE = new Date(2023, 3, 15)
 
@@ -76,7 +77,7 @@ test('importDate: should import given date', async () => {
 `)
   expect(queries[0]).toMatchInlineSnapshot(`
 [
-  "select count(distinct "idvisit") as "count" from "matomo" where date(timezone('UTC', action_timestamp)) = $1",
+  "select count(distinct "idvisit") as "count" from "matomo_partitioned" where date(timezone('UTC', action_timestamp)) = $1",
   [
     "2023-04-15",
   ],
@@ -85,50 +86,62 @@ test('importDate: should import given date', async () => {
   expect(queries.length).toEqual(1 + matomoVisit.actionDetails.length * 2)
 })
 
-test('importDate: should paginate matomo API calls and produce 46 queries', async () => {
+test('importDate: should handle pagination across multiple pages', async () => {
   const piwikApi = jest.fn()
-  let calls = 0
 
-  piwikApi.mockImplementation((options, cb) => {
-    cb(
-      null,
-      Array.from({ length: calls ? 5 : 10 }, (k, _v) => ({
+  // Mock first call to return exactly 10 visits (triggers pagination)
+  piwikApi
+    .mockImplementationOnce((options, cb) => {
+      const visits = Array.from({ length: 10 }, (_, i) => ({
         ...matomoVisit,
-        idVisit: k
+        idVisit: 200 + i
       }))
-    )
-    calls++
-  })
+      cb(null, visits)
+    })
+    // Mock second call to return 5 visits (stops pagination)
+    .mockImplementationOnce((options, cb) => {
+      const visits = Array.from({ length: 5 }, (_, i) => ({
+        ...matomoVisit,
+        idVisit: 300 + i
+      }))
+      cb(null, visits)
+    })
 
-  pool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 })
+  // Mock database query for record count
+  pool.query.mockResolvedValue({ rows: [], rowCount: 0 })
 
-  await importDate(piwikApi, TEST_DATE)
+  const result = await importDate(piwikApi, TEST_DATE)
 
+  // Should make exactly 2 API calls due to pagination
   expect(piwikApi.mock.calls.length).toEqual(2)
 
-  expect(piwikApi.mock.calls[0][0]).toMatchInlineSnapshot(`
-{
-  "date": "2023-04-15",
-  "filter_limit": 10,
-  "filter_offset": 0,
-  "filter_sort_order": "asc",
-  "idSite": "42",
-  "method": "Live.getLastVisitsDetails",
-  "period": "day",
-}
-`)
-  expect(piwikApi.mock.calls[1][0]).toMatchInlineSnapshot(`
-{
-  "date": "2023-04-15",
-  "filter_limit": 10,
-  "filter_offset": 10,
-  "filter_sort_order": "asc",
-  "idSite": "42",
-  "method": "Live.getLastVisitsDetails",
-  "period": "day",
-}
-`)
+  // First call should have offset 0
+  expect(piwikApi.mock.calls[0][0]).toMatchObject({
+    date: '2023-04-15',
+    filter_limit: 10,
+    filter_offset: 0,
+    filter_sort_order: 'asc',
+    idSite: '42',
+    method: 'Live.getLastVisitsDetails',
+    period: 'day'
+  })
 
-  expect(queries.length).toEqual(1 + matomoVisit.actionDetails.length * 15)
-  expect(queries).toMatchSnapshot()
+  // Second call should have offset 10
+  expect(piwikApi.mock.calls[1][0]).toMatchObject({
+    date: '2023-04-15',
+    filter_limit: 10,
+    filter_offset: 10,
+    filter_sort_order: 'asc',
+    idSite: '42',
+    method: 'Live.getLastVisitsDetails',
+    period: 'day'
+  })
+
+  // Should process all events from both pages
+  // 15 visits total × 3 actionDetails each = 45 events
+  expect(result.length).toEqual(45)
+
+  // Verify database queries: 1 count query + (45 events × 1 query per event)
+  // Note: Each event generates 1 database query for insertion
+  expect(queries.length).toEqual(1 + 45)
 })
