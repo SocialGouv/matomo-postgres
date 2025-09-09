@@ -9,6 +9,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "type": "module",
   "bin": {
     "matomo-postgres": "./bin/index.js"
   },

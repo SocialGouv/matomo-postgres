@@ -2,50 +2,68 @@ import { promises as fs } from 'fs'
 import { FileMigrationProvider, Migrator } from 'kysely'
 import * as path from 'path'
 
-import { DESTINATION_TABLE } from './config'
-import { db } from './db'
+import { MATOMO_TABLE_NAME } from './config.js'
+import { db } from './db.js'
 
 async function migrateToLatest() {
-  const migrator = new Migrator({
-    db,
-    provider: new FileMigrationProvider({
-      fs,
-      path,
-      migrationFolder: __dirname + '/migrations'
-    }),
-    // allow to have mutliple migratable instances in a single schema
-    migrationTableName: `${DESTINATION_TABLE}_migration`,
-    migrationLockTableName: `${DESTINATION_TABLE}_migration_lock`
-  })
+  console.log(`Starting migrate to latest`)
 
-  const { error, results } = await migrator.migrateToLatest()
+  try {
+    const migrator = new Migrator({
+      db,
+      provider: new FileMigrationProvider({
+        fs,
+        path,
+        migrationFolder: path.join(
+          path.dirname(new URL(import.meta.url).pathname),
+          'migrations'
+        )
+      }),
+      // allow to have mutliple migratable instances in a single schema
+      migrationTableName: `${MATOMO_TABLE_NAME}_migration`,
+      migrationLockTableName: `${MATOMO_TABLE_NAME}_migration_lock`
+    })
+    const { error, results } = await migrator.migrateToLatest()
 
-  results?.forEach((it) => {
-    if (it.status === 'Success') {
-      console.log(`migration "${it.migrationName}" was executed successfully`)
-    } else if (it.status === 'Error') {
-      console.error(`failed to execute migration "${it.migrationName}"`)
+    results?.forEach((it) => {
+      if (it.status === 'Success') {
+        console.log(`migration "${it.migrationName}" was executed successfully`)
+      } else if (it.status === 'Error') {
+        console.error(`failed to execute migration "${it.migrationName}"`)
+      }
+    })
+
+    if (error) {
+      console.error('failed to migrate')
+      console.error(error)
+      process.exit(1)
+    } else {
+      if (!results?.length) {
+        console.log('No migration to run')
+      }
     }
-  })
-
-  if (error) {
-    console.error('failed to migrate')
-    console.error(error)
+  } catch (uncaughtError) {
+    console.error('UNCAUGHT ERROR during migration:')
+    console.error(
+      'Error message:',
+      uncaughtError instanceof Error
+        ? uncaughtError.message
+        : String(uncaughtError)
+    )
+    console.error(
+      'Error stack:',
+      uncaughtError instanceof Error
+        ? uncaughtError.stack
+        : 'No stack trace available'
+    )
+    console.error('Full error object:', uncaughtError)
     process.exit(1)
-  } else {
-    if (!results?.length) {
-      console.log('No migration to run')
-    }
   }
 }
 
 export default migrateToLatest
 
-async function start() {
+export async function startMigration() {
   await migrateToLatest()
-  await db.destroy()
-}
-
-if (require.main === module) {
-  start()
+  // Don't destroy the db connection here since the main application will need it
 }

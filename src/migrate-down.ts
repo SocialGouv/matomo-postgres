@@ -2,7 +2,7 @@ import { promises as fs } from 'fs'
 import { FileMigrationProvider, Migrator } from 'kysely'
 import * as path from 'path'
 
-import { db } from './db'
+import { db } from './db.js'
 
 async function migrateDown() {
   const migrator = new Migrator({
@@ -10,7 +10,10 @@ async function migrateDown() {
     provider: new FileMigrationProvider({
       fs,
       path,
-      migrationFolder: __dirname + '/migrations'
+      migrationFolder: path.join(
+        path.dirname(new URL(import.meta.url).pathname),
+        'migrations'
+      )
     })
   })
 
