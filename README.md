@@ -44,3 +44,4 @@ Use `yarn test -u` to update the snapshots
 ## Database migrations
 
 `yarn migrate` is run on each `yarn start` with Kysely migrations at [./src/migrations](./src/migrations/)
+
