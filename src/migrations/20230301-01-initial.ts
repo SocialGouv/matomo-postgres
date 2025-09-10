@@ -1,10 +1,10 @@
 import { Kysely, sql } from 'kysely'
 
-const DESTINATION_TABLE = process.env.DESTINATION_TABLE || 'matomo'
+const MATOMO_TABLE_NAME = process.env.MATOMO_TABLE_NAME || 'matomo'
 
 export async function up(db: Kysely<any>): Promise<void> {
   await db.schema
-    .createTable(DESTINATION_TABLE)
+    .createTable(MATOMO_TABLE_NAME)
     .ifNotExists()
     .addColumn('action_id', 'text', (col) => col.unique().notNull())
     .addColumn('idsite', 'text')
@@ -53,5 +53,5 @@ export async function up(db: Kysely<any>): Promise<void> {
 }
 
 export async function down(db: Kysely<any>): Promise<void> {
-  await db.schema.dropTable(DESTINATION_TABLE).execute()
+  await db.schema.dropTable(MATOMO_TABLE_NAME).execute()
 }
