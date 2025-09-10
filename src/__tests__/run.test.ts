@@ -1,9 +1,11 @@
 process.env.MATOMO_SITE = '42'
 process.env.PROJECT_NAME = 'some-project'
 process.env.RESULTPERPAGE = '10'
-// Clear STARTDATE to avoid conflicts with fake timers
+delete process.env.INITIAL_OFFSET
+delete process.env.DESTINATION_TABLE
 delete process.env.STARTDATE
 
+// Clear STARTDATE to avoid conflicts with fake timers
 const TEST_DATE = new Date(2023, 3, 1)
 
 let queries: any[] = []
@@ -90,6 +92,7 @@ test('run: should run SQL queries', async () => {
   jest.useFakeTimers().setSystemTime(TEST_DATE.getTime())
   await run()
   expect(queries).toMatchSnapshot()
-  // Updated expectation based on actual behavior (18 days * 6 events + 1 initial query)
-  expect(queries.length).toEqual(1 + 18 * (6 + 1))
+  // Updated expectation based on actual behavior with INITIAL_OFFSET=3 (5 days total: 3 days before + today + 1 day after)
+  // 5 days * (6 events per day + 1 count query per day) + 1 initial query for last event lookup
+  expect(queries.length).toEqual(1 + 5 * (6 + 1))
 })

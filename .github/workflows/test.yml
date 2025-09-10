@@ -2,7 +2,7 @@ name: Test
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize, ready_for_review]
   push:
     branches: ["*"]
 
@@ -22,8 +22,8 @@ jobs:
       - name: Installing
         run: yarn --frozen-lockfile --perfer-offline --link-duplicates
 
-      # - name: Lint
-      #   run: yarn lint
+      - name: Lint
+        run: yarn lint
 
       - name: Unit tests
         run: |
