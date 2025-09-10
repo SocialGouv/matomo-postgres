@@ -1,6 +1,6 @@
 import { Visit } from 'types/matomo-api'
 
-import { getEventsFromMatomoVisit } from '../importEvent'
+import { getEventsFromMatomoVisit } from '../importEvent.js'
 import matomoVisit from './visit.json'
 
 process.env.MATOMO_SITE = '42'
