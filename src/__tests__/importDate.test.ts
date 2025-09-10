@@ -1,7 +1,8 @@
-// Set environment variables before any imports
+// Set environment variables BEFORE any imports
 process.env.MATOMO_SITE = '42'
 process.env.PROJECT_NAME = 'some-project'
 process.env.RESULTPERPAGE = '10'
+process.env.DESTINATION_TABLE = 'matomo'
 
 import { Pool } from 'pg'
 
@@ -77,7 +78,7 @@ test('importDate: should import given date', async () => {
 `)
   expect(queries[0]).toMatchInlineSnapshot(`
 [
-  "select count(distinct "idvisit") as "count" from "matomo_partitioned" where date(timezone('UTC', action_timestamp)) = $1",
+  "select count(distinct "idvisit") as "count" from "matomo" where date(timezone('UTC', action_timestamp)) = $1",
   [
     "2023-04-15",
   ],
