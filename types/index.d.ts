@@ -4,7 +4,7 @@ import { ColumnType } from 'kysely'
 
 export * from './matomo-api'
 
-export type MatomoTableName = 'matomo' | string
+export type MatomoTableName = 'matomo' | 'matomo_partitioned' | string
 
 export interface MatomoTable {
   idsite: string
