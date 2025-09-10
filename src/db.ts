@@ -1,9 +1,10 @@
 import startDebug from 'debug'
 import { Kysely, PostgresDialect } from 'kysely'
-import { Pool } from 'pg'
+import pkg from 'pg'
 import { MatomoTable } from 'types'
+const { Pool } = pkg
 
-import { PGDATABASE } from './config'
+import { PGDATABASE } from './config.js'
 
 startDebug('db')
 

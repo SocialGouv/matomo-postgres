@@ -1,4 +1,4 @@
-import eachDayOfInterval from 'date-fns/eachDayOfInterval'
+import { eachDayOfInterval } from 'date-fns'
 import startDebug from 'debug'
 import { Kysely, sql } from 'kysely'
 import pAll from 'p-all'
@@ -8,12 +8,11 @@ import {
   INITIAL_OFFSET,
   MATOMO_KEY,
   MATOMO_SITE,
-  MATOMO_URL,
-  PGDATABASE
-} from './config'
-import { Database, db } from './db'
-import { importDate } from './importDate'
-import PiwikClient from './PiwikClient'
+  MATOMO_URL
+} from './config.js'
+import { Database, db } from './db.js'
+import { importDate } from './importDate.js'
+import PiwikClient from './PiwikClient.js'
 
 const debug = startDebug('index')
 
@@ -107,19 +106,6 @@ async function run(date?: string) {
   return res
 }
 
-export default run
-
-if (require.main === module) {
-  ;(async () => {
-    if (!MATOMO_SITE) return console.error('Missing env MATOMO_SITE')
-    if (!MATOMO_KEY) return console.error('Missing env MATOMO_KEY')
-    if (!PGDATABASE) return console.error('Missing env PGDATABASE')
-    await run()
-    debug('run finished')
-    db.destroy()
-  })()
-}
-
 async function findLastEventInMatomo(db: Kysely<Database>) {
   const latest = await db
     .selectFrom(DESTINATION_TABLE)
@@ -141,3 +127,5 @@ async function findLastEventInMatomo(db: Kysely<Database>) {
 
   return null
 }
+
+export default run
