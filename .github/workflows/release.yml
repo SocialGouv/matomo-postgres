@@ -5,11 +5,21 @@ on:
   push:
     branches: [main, alpha, beta, next]
 
+permissions:
+  id-token: write  # Required for OIDC token generation
+
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
     steps:
+      - name: Get GitHub App Token
+        id: token
+        uses: SocialGouv/token-bureau@main
+        with:
+          token-bureau-url: https://token-bureau.fabrique.social.gouv.fr
+          audience: socialgouv
+
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
@@ -27,7 +37,7 @@ jobs:
             @semantic-release/changelog
             @semantic-release/git
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.token.outputs.token }}
           GIT_AUTHOR_EMAIL: ${{ secrets.SOCIALGROOVYBOT_EMAIL }}
           GIT_AUTHOR_NAME: ${{ secrets.SOCIALGROOVYBOT_NAME }}
           GIT_COMMITTER_EMAIL: ${{ secrets.SOCIALGROOVYBOT_EMAIL }}
