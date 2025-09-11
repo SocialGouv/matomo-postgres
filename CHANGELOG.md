@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.3...v2.2.4) (2025-09-11)
+
+
+### Bug Fixes
+
+* import path ([b2b27ce](https://github.com/SocialGouv/matomo-postgres/commit/b2b27cee4894150314ad86cb551a68df18ffc398))
+
 ## [2.2.3](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.2...v2.2.3) (2025-09-11)
 
 
