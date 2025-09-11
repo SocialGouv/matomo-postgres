@@ -5,7 +5,7 @@
     "outDir": "./dist",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "module": "ES2022",
     "target": "ES2015",
     "types": [
