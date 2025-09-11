@@ -1,5 +1,5 @@
 import { Kysely, sql } from 'kysely'
-import { PARTITIONED_MATOMO_TABLE_NAME } from 'src/config'
+import { PARTITIONED_MATOMO_TABLE_NAME } from '../config'
 
 export async function up(db: Kysely<any>): Promise<void> {
   // First, create the partitioned table structure as a partitioned table
