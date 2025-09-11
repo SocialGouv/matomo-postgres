@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.0...v2.2.1) (2025-09-11)
+
+
+### Bug Fixes
+
+* clean duplicate changelog entries from semantic-release loop ([4280548](https://github.com/SocialGouv/matomo-postgres/commit/4280548b8102d43c6e15cdda73dd6a3502169b0a))
+
 # [2.2.0](https://github.com/SocialGouv/matomo-postgres/compare/v2.1.0...v2.2.0) (2025-09-11)
 
 
