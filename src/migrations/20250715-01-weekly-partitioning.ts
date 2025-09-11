@@ -345,12 +345,12 @@ export async function up(db: Kysely<any>): Promise<void> {
 
 export async function down(db: Kysely<any>): Promise<void> {
   // Drop trigger and function
-  await sql`DROP TRIGGER IF EXISTS ${sql.id(`${PARTITIONED_MATOMO_TABLE_NAME}_auto_partition`)} ON ${sql.id(PARTITIONED_MATOMO_TABLE_NAME)}`.execute(
+  const trigger_name = `${PARTITIONED_MATOMO_TABLE_NAME}_auto_partition`
+  await sql`DROP TRIGGER IF EXISTS ${sql.id(trigger_name)} ON ${sql.id(PARTITIONED_MATOMO_TABLE_NAME)}`.execute(
     db
   )
-  await sql`DROP FUNCTION IF EXISTS ${sql.id(`${PARTITIONED_MATOMO_TABLE_NAME}_partition_trigger`)}()`.execute(
-    db
-  )
+  const function_name = `${PARTITIONED_MATOMO_TABLE_NAME}_partition_trigger`
+  await sql`DROP FUNCTION IF EXISTS ${sql.id(function_name)}()`.execute(db)
   await sql`DROP FUNCTION IF EXISTS create_weekly_partition_if_not_exists(text, timestamptz)`.execute(
     db
   )

@@ -184,8 +184,7 @@ export const getEventsFromMatomoVisit = (
   return matomoVisit.actionDetails.map((actionDetail, actionIndex) => {
     const usercustomproperties: Record<string, any> = {}
     for (let k = 1; k < 10; k++) {
-      const property =
-        actionDetail.customVariables && actionDetail.customVariables[k]
+      const property = actionDetail.customVariables?.[k]
       if (!property) continue // max 10 custom variables
       //@ts-expect-error implicit any type
       usercustomproperties[property[`customVariableName${k}`]] =
