@@ -79,5 +79,22 @@ export default defineConfig([
         ...globals.jest
       }
     }
+  },
+  {
+    files: ['src/migrations/**/*.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['src/*'],
+              message:
+                'Migration files should not import from src/ paths. Use direct constants or relative imports instead to avoid module resolution issues in production.'
+            }
+          ]
+        }
+      ]
+    }
   }
 ])
