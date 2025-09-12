@@ -1,3 +1,10 @@
+## [2.2.5](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.4...v2.2.5) (2025-09-12)
+
+
+### Bug Fixes
+
+* Forbid importing using `src` path and fix related error ([80a1c36](https://github.com/SocialGouv/matomo-postgres/commit/80a1c36b82d56ac4ad782c8a4f0dd69ee6d88a22))
+
 ## [2.2.4](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.3...v2.2.4) (2025-09-11)
 
 
