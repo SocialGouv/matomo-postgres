@@ -20,8 +20,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: yarn
+
       - name: Installing
-        run: yarn --frozen-lockfile --perfer-offline --link-duplicates
+        run: yarn --frozen-lockfile --prefer-offline --link-duplicates
 
       - name: Get GitHub App Token
         id: token
@@ -43,4 +49,3 @@ jobs:
           GIT_COMMITTER_EMAIL: ${{ secrets.SOCIALGROOVYBOT_EMAIL }}
           GIT_COMMITTER_NAME: ${{ secrets.SOCIALGROOVYBOT_NAME }}
           NPM_TOKEN: ${{ secrets.SOCIALGROOVYBOT_NPM_TOKEN }}
-
