@@ -12,19 +12,31 @@ export interface Database {
   [key: string]: MatomoTable
 }
 
+export const pool = new Pool({
+  connectionString: PGDATABASE,
+  ssl: {
+    rejectUnauthorized: false
+  }
+})
+
+// Validate pool is properly initialized
+if (!pool || typeof pool.connect !== 'function') {
+  throw new Error('Failed to initialize PostgreSQL connection pool')
+}
+
 export const db = new Kysely<Database>({
   dialect: new PostgresDialect({
-    pool: new Pool({
-      connectionString: PGDATABASE,
-      ssl: {
-        rejectUnauthorized: false
-      }
-    })
+    pool: pool
   }),
   log(event) {
     if (event.level === 'query') {
-      // debug(event.query.sql);
-      // debug(event.query.parameters);
+      // debug(event.query.sql)
+      // debug(event.query.parameters)
     }
   }
 })
+
+// Validate the Kysely instance
+if (!db) {
+  throw new Error('Failed to initialize Kysely database instance')
+}

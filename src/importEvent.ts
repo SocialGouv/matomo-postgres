@@ -1,7 +1,7 @@
 import { sql } from 'kysely'
 import { ActionDetail, Visit } from 'types/matomo-api'
 
-import { db } from './db.js'
+import { db, pool } from './db.js'
 
 /**
  *
@@ -75,6 +75,11 @@ export const importEvent = async (event: MatomoActionDetail): Promise<void> => {
   }
 
   try {
+    // FIX: Validate pool before operation to prevent "connect of undefined" error
+    if (!pool || typeof pool.connect !== 'function') {
+      throw new Error('Database connection pool is invalid or undefined')
+    }
+
     // Keep the stored procedure but centralize mapping to avoid parameter mis-ordering
     await sql`
       SELECT insert_into_matomo_partitioned(
