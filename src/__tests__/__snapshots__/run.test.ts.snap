@@ -52,21 +52,15 @@ exports[`run: should fetch the latest 5 days on matomo 1`] = `
 
 exports[`run: should fetch the latest event date if no date provided 1`] = `
 [
-  "select action_timestamp at time zone 'UTC' as "action_timestamp" from "matomo" order by "action_timestamp" desc limit $1",
+  "select count(distinct "idvisit") as "count" from "matomo" where date(timezone('UTC', action_timestamp)) = $1",
   [
-    1,
+    "2023-03-29",
   ],
 ]
 `;
 
 exports[`run: should run SQL queries 1`] = `
 [
-  [
-    "select action_timestamp at time zone 'UTC' as "action_timestamp" from "matomo" order by "action_timestamp" desc limit $1",
-    [
-      1,
-    ],
-  ],
   [
     "select count(distinct "idvisit") as "count" from "matomo" where date(timezone('UTC', action_timestamp)) = $1",
     [
