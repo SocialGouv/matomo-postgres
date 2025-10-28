@@ -44,14 +44,15 @@ yarn add @socialgouv/matomo-postgres
 
 ### Optional Environment Variables
 
-| Variable                        | Default              | Description                                             |
-| ------------------------------- | -------------------- | ------------------------------------------------------- |
-| `DESTINATION_TABLE`             | `matomo`             | Selects which table to write to (normal or partitioned) |
-| `MATOMO_TABLE_NAME`             | `matomo`             | Name for the standard table                             |
-| `PARTITIONED_MATOMO_TABLE_NAME` | `matomo_partitioned` | Name for the partitioned table                          |
-| `STARTDATE`                     | Auto-detected        | Override start date for initial import (YYYY-MM-DD)     |
-| `RESULTPERPAGE`                 | `500`                | API pagination size (max results per request)           |
-| `INITIAL_OFFSET`                | `3`                  | Days to look back on first run                          |
+| Variable                        | Default              | Description                                                         |
+| ------------------------------- | -------------------- | ------------------------------------------------------------------- |
+| `DESTINATION_TABLE`             | `matomo`             | Selects which table to write to (normal or partitioned)             |
+| `MATOMO_TABLE_NAME`             | `matomo`             | Name for the standard table                                         |
+| `PARTITIONED_MATOMO_TABLE_NAME` | `matomo_partitioned` | Name for the partitioned table                                      |
+| `STARTDATE`                     | Auto-detected        | Override start date for initial import (YYYY-MM-DD)                 |
+| `FORCE_STARTDATE`               | `false`              | When `true`, skip database lookup and use STARTDATE unconditionally |
+| `RESULTPERPAGE`                 | `500`                | API pagination size (max results per request)                       |
+| `INITIAL_OFFSET`                | `3`                  | Days to look back on first run                                      |
 
 ## 🗂️ Table Architecture
 
@@ -89,6 +90,36 @@ Consider using partitioned tables when:
 - **Storage Optimization**: Better compression and maintenance of historical data
 
 Both tables share the same schema structure, ensuring compatibility regardless of your choice.
+
+### Forcing Start Date Override
+
+When you need to temporarily override the automatic date detection (e.g., to re-import specific data or recover from errors):
+
+```bash
+export FORCE_STARTDATE=true
+export STARTDATE=2024-01-01
+```
+
+This configuration will:
+- Skip checking the database for the last event
+- Use the specified `STARTDATE` unconditionally
+- Useful for one-time re-imports or data recovery scenarios
+
+**Important:** Remember to unset `FORCE_STARTDATE` after your one-time import to restore normal automatic detection behavior.
+
+**Cronjob Example:**
+
+```bash
+# Temporarily add to your cronjob environment variables:
+FORCE_STARTDATE=true
+STARTDATE=2024-10-15
+MATOMO_URL=https://analytics.example.com/
+MATOMO_SITE=1
+MATOMO_KEY=your_api_token
+PGDATABASE=postgresql://user:pass@host:5432/db
+
+# After import completes, remove FORCE_STARTDATE to resume normal operation
+```
 
 ## 🏗️ Architecture
 

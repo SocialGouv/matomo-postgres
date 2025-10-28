@@ -29,8 +29,9 @@ async function run(date?: string) {
 
   // priority:
   //  - optional parameter date
+  //  - STARTDATE (if FORCE_STARTDATE is true)
   //  - last event in the table
-  //  - optional env.STARTDATE
+  //  - STARTDATE (if FORCE_STARTDATE is false)
   //  - today
 
   let referenceDate
@@ -41,7 +42,17 @@ async function run(date?: string) {
     )
   }
 
-  if (!referenceDate) {
+  // Check FORCE_STARTDATE mode first
+  const forceStartDate = process.env.FORCE_STARTDATE === 'true'
+  if (!referenceDate && forceStartDate && process.env.STARTDATE) {
+    referenceDate = new Date(process.env.STARTDATE)
+    console.log(
+      `✅ FORCE_STARTDATE enabled - Using STARTDATE environment variable: ${referenceDate.toISOString()}`
+    )
+  }
+
+  // Only query database if not forcing STARTDATE
+  if (!referenceDate && !forceStartDate) {
     console.log(`🔍 Looking for last event in database...`)
     referenceDate = await findLastEventInMatomo(db)
     if (referenceDate) {
@@ -53,6 +64,7 @@ async function run(date?: string) {
     }
   }
 
+  // Fallback to STARTDATE if database had no results
   if (!referenceDate && process.env.STARTDATE) {
     referenceDate = new Date(process.env.STARTDATE)
     console.log(
