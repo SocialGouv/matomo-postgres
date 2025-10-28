@@ -41,6 +41,13 @@ async function run(date?: string) {
     )
   }
 
+  if (!referenceDate && process.env.STARTDATE) {
+    referenceDate = new Date(process.env.STARTDATE)
+    console.log(
+      `✅ Using STARTDATE environment variable: ${referenceDate.toISOString()}`
+    )
+  }
+
   if (!referenceDate) {
     console.log(`🔍 Looking for last event in database...`)
     referenceDate = await findLastEventInMatomo(db)
@@ -51,13 +58,6 @@ async function run(date?: string) {
     } else {
       console.log(`ℹ️ No previous events found in database`)
     }
-  }
-
-  if (!referenceDate && process.env.STARTDATE) {
-    referenceDate = new Date(process.env.STARTDATE)
-    console.log(
-      `✅ Using STARTDATE environment variable: ${referenceDate.toISOString()}`
-    )
   }
 
   if (!referenceDate) {
