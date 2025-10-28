@@ -25,7 +25,12 @@ jobs:
         with:
           node-version: lts/*
           cache: yarn
-          corepack: true
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Prepare Yarn version
+        run: corepack prepare yarn@4.10.3 --activate
 
       - name: Installing
         run: yarn --frozen-lockfile --prefer-offline --link-duplicates
