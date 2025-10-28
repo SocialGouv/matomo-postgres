@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.5...v2.3.0) (2025-10-28)
+
+
+### Features
+
+* Add FORCE_STARTDATE env variable to force the use of STARTDATE ([3089b49](https://github.com/SocialGouv/matomo-postgres/commit/3089b4969402f595532ea42b714346ee1b0872d6))
+
 ## [2.2.5](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.4...v2.2.5) (2025-09-12)
 
 
