@@ -15,29 +15,18 @@ const isoDate = (date: Date) => formatISO(date, { representation: 'date' })
 
 /** check how many visits complete for a given date */
 const getRecordsCount = async (date: string): Promise<number> => {
-  console.log(`🔍 [DIAGNOSTIC] getRecordsCount called for date: ${date}`)
-  console.log('🔍 [DIAGNOSTIC] Checking pool validity...')
-  console.log('  - pool exists:', pool ? 'YES' : 'NO')
-  console.log('  - pool.connect is function:', pool && typeof pool.connect === 'function' ? 'YES' : 'NO')
-
   if (!pool || typeof pool.connect !== 'function') {
-    console.error('❌ [DIAGNOSTIC] Pool validation failed in getRecordsCount!')
-    console.error('  - pool:', pool)
-    console.error('  - pool type:', typeof pool)
-    console.error('  - pool.connect:', pool && pool.connect)
     throw new Error(
       'Database connection pool is invalid or undefined in getRecordsCount'
     )
   }
 
-  console.log('🔍 [DIAGNOSTIC] Pool validated, executing query...')
   const result = await db
     .selectFrom(DESTINATION_TABLE)
     .select(db.fn.count<string>('idvisit').distinct().as('count'))
     // UTC to be iso with matomo matomo data
     .where(sql`date(timezone('UTC', action_timestamp))`, '=', date)
     .executeTakeFirst()
-  console.log(`🔍 [DIAGNOSTIC] Query result:`, result)
   // start at previous visit in case action didnt finished to record
   const count = Math.max(0, (result && parseInt(result.count) - 1) || 0)
   return count
