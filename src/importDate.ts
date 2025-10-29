@@ -15,7 +15,6 @@ const isoDate = (date: Date) => formatISO(date, { representation: 'date' })
 
 /** check how many visits complete for a given date */
 const getRecordsCount = async (date: string): Promise<number> => {
-  // FIX: Validate pool before operation to prevent "connect of undefined" error
   if (!pool || typeof pool.connect !== 'function') {
     throw new Error(
       'Database connection pool is invalid or undefined in getRecordsCount'

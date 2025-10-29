@@ -75,7 +75,6 @@ export const importEvent = async (event: MatomoActionDetail): Promise<void> => {
   }
 
   try {
-    // FIX: Validate pool before operation to prevent "connect of undefined" error
     if (!pool || typeof pool.connect !== 'function') {
       throw new Error('Database connection pool is invalid or undefined')
     }
