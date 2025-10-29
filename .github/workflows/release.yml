@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
 
       - name: Installing
-        run: yarn --frozen-lockfile --prefer-offline --link-duplicates
+        run: yarn --prefer-offline --link-duplicates
 
       - name: Get GitHub App Token
         id: token

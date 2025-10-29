@@ -20,7 +20,7 @@ jobs:
           cache: yarn
 
       - name: Installing
-        run: yarn --frozen-lockfile --prefer-offline --link-duplicates
+        run: yarn --prefer-offline --link-duplicates
 
       - name: Lint
         run: yarn lint
