@@ -1,3 +1,20 @@
+## [2.3.1](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.0...v2.3.1) (2025-10-29)
+
+
+### Bug Fixes
+
+* Actually enable corepack ([0a364d4](https://github.com/SocialGouv/matomo-postgres/commit/0a364d41af7c5e283301e3fdedfea9f6c7d0bdf0))
+* Corepack ([c951254](https://github.com/SocialGouv/matomo-postgres/commit/c9512548434bc92c8b208aec4f045ec9c85ba8f3))
+* Corepack ([7db4e0b](https://github.com/SocialGouv/matomo-postgres/commit/7db4e0b077b28b460c1fb1c20430c2d14ea46493))
+* Enable yarn corepack ([35754d0](https://github.com/SocialGouv/matomo-postgres/commit/35754d031c21291a20d13c7ccc5e7abc1159ccb7))
+* Ensure db pool is not garbage collected ([a477e45](https://github.com/SocialGouv/matomo-postgres/commit/a477e45c80f54b3bc8a732e16846b3478c513b1f))
+* Regenerate yarn.lock ([cc8b8b6](https://github.com/SocialGouv/matomo-postgres/commit/cc8b8b64ae567b7e610d3b195cb6f1b083ab6d49))
+* Remove package manager field in package.json ([70183e3](https://github.com/SocialGouv/matomo-postgres/commit/70183e33d2b2c3a69cc7ed3412a14516d2f61635))
+* Revert package manager issues ([f4c08c6](https://github.com/SocialGouv/matomo-postgres/commit/f4c08c60aa0e640547347c7f5746de01951f6baf))
+* Temporarily disable frozen lock file ([9b62d56](https://github.com/SocialGouv/matomo-postgres/commit/9b62d560346997b1db2e4fcbdc69611f53ea5e01))
+* Yarn install state ([009a341](https://github.com/SocialGouv/matomo-postgres/commit/009a34198bcde469811147d5d614f211bf1b8ca6))
+* yarnrc nodeLinker and lock were out of date ([f7dad50](https://github.com/SocialGouv/matomo-postgres/commit/f7dad505f70b0be1f78d7c4a70635a3d61f8071d))
+
 # [2.3.0](https://github.com/SocialGouv/matomo-postgres/compare/v2.2.5...v2.3.0) (2025-10-28)
 
 
