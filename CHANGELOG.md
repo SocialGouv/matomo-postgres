@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.1...v2.3.2) (2025-10-29)
+
+
+### Bug Fixes
+
+*  Add some diagnostic logs to figure out issue in production ([839e493](https://github.com/SocialGouv/matomo-postgres/commit/839e4937ac020f2c9dd6d9ae225c5b6e7998fe66))
+
 ## [2.3.1](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.0...v2.3.1) (2025-10-29)
 
 
