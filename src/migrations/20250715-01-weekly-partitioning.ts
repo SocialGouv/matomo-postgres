@@ -88,6 +88,11 @@ export async function up(db: Kysely<any>): Promise<void> {
 
             RAISE NOTICE 'Created partition % for range % to %', partition_name, start_date, end_date;
         END IF;
+    EXCEPTION
+        WHEN duplicate_table THEN
+            -- Partition was created by a concurrent process between the check and creation
+            -- This is expected in high-concurrency scenarios, safely ignore
+            RAISE NOTICE 'Partition % already exists (created concurrently)', partition_name;
     END;
     $$ LANGUAGE plpgsql;
   `.execute(db)
