@@ -1,3 +1,10 @@
+## [2.3.8](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.7...v2.3.8) (2026-01-28)
+
+
+### Bug Fixes
+
+* npm release ([c1ac7a0](https://github.com/SocialGouv/matomo-postgres/commit/c1ac7a0e51f8fedeabf7f041cb7235e537b8c618))
+
 ## [2.3.7](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.6...v2.3.7) (2026-01-28)
 
 
