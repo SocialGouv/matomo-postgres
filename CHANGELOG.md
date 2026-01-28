@@ -1,3 +1,10 @@
+## [2.3.5](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.4...v2.3.5) (2026-01-28)
+
+
+### Bug Fixes
+
+* bin ([f41a532](https://github.com/SocialGouv/matomo-postgres/commit/f41a53274046aed60ad8d7fc9d8eb8d23b15406f))
+
 ## [2.3.4](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.3...v2.3.4) (2026-01-28)
 
 
