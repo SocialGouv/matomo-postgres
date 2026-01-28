@@ -6,6 +6,9 @@
   "types": "types/index.d.ts",
   "license": "Apache-2.0",
   "main": "dist/index.js",
+  "repository": {
+    "url": "https://github.com/SocialGouv/matomo-postgres"
+  },
   "preferGlobal": true,
   "publishConfig": {
     "access": "public"
