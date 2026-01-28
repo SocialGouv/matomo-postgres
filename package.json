@@ -1,7 +1,7 @@
 {
   "name": "@socialgouv/matomo-postgres",
   "description": "Extract visitor events from Matomo API and push to Postgres",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "packageManager": "pnpm@10.28.1",
   "types": "types/index.d.ts",
   "license": "Apache-2.0",
