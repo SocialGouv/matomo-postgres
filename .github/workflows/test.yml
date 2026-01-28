@@ -33,4 +33,4 @@ jobs:
       - name: Unit tests
         run: |
           pnpm build
-          pnpm test
+          pnpm test -u

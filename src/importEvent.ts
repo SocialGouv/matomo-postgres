@@ -1,7 +1,58 @@
 import { sql } from 'kysely'
 import { ActionDetail, Visit } from 'types/matomo-api'
 
+import { DESTINATION_TABLE, PARTITIONED_MATOMO_TABLE_NAME } from './config.js'
 import { db, pool } from './db.js'
+
+const MATOMO_INSERT_COLUMNS = [
+  'action_id',
+  'action_timestamp',
+  'idsite',
+  'idvisit',
+  'actions',
+  'country',
+  'region',
+  'city',
+  'operatingsystemname',
+  'devicemodel',
+  'devicebrand',
+  'visitduration',
+  'dayssincefirstvisit',
+  'visitortype',
+  'sitename',
+  'userid',
+  'serverdateprettyfirstaction',
+  'action_type',
+  'action_eventcategory',
+  'action_eventaction',
+  'action_eventname',
+  'action_eventvalue',
+  'action_timespent',
+  'usercustomproperties',
+  'usercustomdimensions',
+  'dimension1',
+  'dimension2',
+  'dimension3',
+  'dimension4',
+  'dimension5',
+  'dimension6',
+  'dimension7',
+  'dimension8',
+  'dimension9',
+  'dimension10',
+  'action_url',
+  'sitesearchkeyword',
+  'action_title',
+  'visitorid',
+  'referrertype',
+  'referrername',
+  'resolution'
+] as const
+
+const MATOMO_INSERT_COLUMN_SQL = sql.join(
+  MATOMO_INSERT_COLUMNS.map((column) => sql.id(column)),
+  sql`,\n`
+)
 
 /**
  *
@@ -78,54 +129,31 @@ export const importEvent = async (event: MatomoActionDetail): Promise<void> => {
     if (!pool || typeof pool.connect !== 'function') {
       throw new Error('Database connection pool is invalid or undefined')
     }
-
-    // Keep the stored procedure but centralize mapping to avoid parameter mis-ordering
-    await sql`
-      SELECT insert_into_matomo_partitioned(
-        ${eventData.action_id},
-        ${eventData.action_timestamp},
-        ${eventData.idsite},
-        ${eventData.idvisit},
-        ${eventData.actions},
-        ${eventData.country},
-        ${eventData.region},
-        ${eventData.city},
-        ${eventData.operatingsystemname},
-        ${eventData.devicemodel},
-        ${eventData.devicebrand},
-        ${eventData.visitduration},
-        ${eventData.dayssincefirstvisit},
-        ${eventData.visitortype},
-        ${eventData.sitename},
-        ${eventData.userid},
-        ${eventData.serverdateprettyfirstaction},
-        ${eventData.action_type},
-        ${eventData.action_eventcategory},
-        ${eventData.action_eventaction},
-        ${eventData.action_eventname},
-        ${eventData.action_eventvalue},
-        ${eventData.action_timespent},
-        ${eventData.usercustomproperties},
-        ${eventData.usercustomdimensions},
-        ${eventData.dimension1},
-        ${eventData.dimension2},
-        ${eventData.dimension3},
-        ${eventData.dimension4},
-        ${eventData.dimension5},
-        ${eventData.dimension6},
-        ${eventData.dimension7},
-        ${eventData.dimension8},
-        ${eventData.dimension9},
-        ${eventData.dimension10},
-        ${eventData.action_url},
-        ${eventData.sitesearchkeyword},
-        ${eventData.action_title},
-        ${eventData.visitorid},
-        ${eventData.referrertype},
-        ${eventData.referrername},
-        ${eventData.resolution}
-      )
-    `.execute(db)
+    // Use different insertion logic based on DESTINATION_TABLE
+    if (DESTINATION_TABLE === PARTITIONED_MATOMO_TABLE_NAME) {
+      // Use stored procedure for partitioned table (handles automatic partition creation)
+      await sql`
+        SELECT insert_into_matomo_partitioned(
+          ${sql.join(
+            MATOMO_INSERT_COLUMNS.map((column) => sql`${eventData[column]}`),
+            sql`, `
+          )}
+        )
+      `.execute(db)
+    } else {
+      // Direct INSERT for standard (non-partitioned) table
+      await sql`
+        INSERT INTO ${sql.id(DESTINATION_TABLE)} (
+          ${MATOMO_INSERT_COLUMN_SQL}
+        ) VALUES (
+          ${sql.join(
+            MATOMO_INSERT_COLUMNS.map((column) => sql`${eventData[column]}`),
+            sql`, `
+          )}
+        )
+        ON CONFLICT (action_id) DO NOTHING
+      `.execute(db)
+    }
   } catch (err) {
     // Add context for troubleshooting
     const minimalContext = {

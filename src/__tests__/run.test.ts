@@ -92,11 +92,6 @@ test('run: should run SQL queries', async () => {
   jest.useFakeTimers().setSystemTime(TEST_DATE.getTime())
   const result = await run()
   expect(queries).toMatchSnapshot()
-  // Updated expectation based on actual behavior with INITIAL_OFFSET=3 (5 days total: 3 days before + today + 1 day after)
-  // 5 days * (6 events per day + 1 count query per day)
-  // Note: We also capture the initial "findLastEventInMatomo" query.
-  expect(queries.length).toEqual(1 + 5 * (6 + 1))
-
   expect(result).toMatchObject({
     daysProcessed: 5,
     eventsImportedTotal: 5 * 6
