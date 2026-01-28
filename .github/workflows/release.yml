@@ -6,6 +6,7 @@ on:
     branches: [main, alpha, beta, next]
 
 permissions:
+  contents: write
   id-token: write  # Required for OIDC token generation
 
 jobs:
