@@ -28,7 +28,7 @@ npx @socialgouv/matomo-postgres
 ```bash
 npm install @socialgouv/matomo-postgres
 # or
-yarn add @socialgouv/matomo-postgres
+pnpm add @socialgouv/matomo-postgres
 ```
 
 ## ⚙️ Configuration
@@ -163,36 +163,36 @@ The tool creates a comprehensive table structure capturing:
 3. **Run the Application**:
 
    ```bash
-   yarn start
+   pnpm start
    ```
 
 ### Development Commands
 
 ```bash
 # Build TypeScript
-yarn build
+pnpm build
 
 # Run tests
-yarn test
+pnpm test
 
 # Update test snapshots
-yarn test -u
+pnpm test -u
 
 # Lint code
-yarn lint
+pnpm lint
 
 # Fix linting issues
-yarn lint:fix
+pnpm lint:fix
 
 # Run database migrations
-yarn migrate
+pnpm migrate
 ```
 
 ## 🗄️ Database Migrations
 
 Database schema is managed through Kysely migrations located in `./src/migrations/`:
 
-Migrations run automatically on each `yarn start` to ensure schema compatibility.
+Migrations run automatically on each `pnpm start` to ensure schema compatibility.
 
 ## 📊 Data Flow
 

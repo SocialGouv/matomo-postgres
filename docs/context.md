@@ -191,7 +191,7 @@ export MATOMO_KEY=your_api_token
 export PGDATABASE=postgres://postgres:postgres@127.0.0.1:5455/postgres
 
 # Run the application
-yarn start
+pnpm start
 ```
 
 ### Testing Strategy
@@ -203,9 +203,9 @@ yarn start
 
 ### Build and Deployment
 
-- **Build**: `yarn build` compiles TypeScript to `dist/`
+- **Build**: `pnpm build` compiles TypeScript to `dist/`
 - **CLI Usage**: `npx @socialgouv/matomo-postgres` for global installation
-- **Migration**: Automatic on startup via `yarn migrate`
+- **Migration**: Automatic on startup via `pnpm migrate`
 
 ## Key Patterns & Conventions
 

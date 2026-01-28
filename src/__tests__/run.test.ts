@@ -94,6 +94,6 @@ test('run: should run SQL queries', async () => {
   expect(queries).toMatchSnapshot()
   // Updated expectation based on actual behavior with INITIAL_OFFSET=3 (5 days total: 3 days before + today + 1 day after)
   // 5 days * (6 events per day + 1 count query per day)
-  // Note: The initial findLastEventInMatomo query is not captured in the test mock environment
-  expect(queries.length).toEqual(5 * (6 + 1))
+  // Note: We also capture the initial "findLastEventInMatomo" query.
+  expect(queries.length).toEqual(1 + 5 * (6 + 1))
 })

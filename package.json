@@ -2,6 +2,7 @@
   "name": "@socialgouv/matomo-postgres",
   "description": "Extract visitor events from Matomo API and push to Postgres",
   "version": "2.3.3",
+  "packageManager": "pnpm@10.28.1",
   "types": "types/index.d.ts",
   "license": "Apache-2.0",
   "main": "dist/index.js",
@@ -16,9 +17,9 @@
     "dist"
   ],
   "scripts": {
-    "start": "yarn migrate && node ./bin/index.js",
+    "start": "pnpm migrate && node ./bin/index.js",
     "build": "tsc",
-    "prepublish": "yarn build",
+    "prepublish": "pnpm build",
     "migrate": "node ./dist/migrate-latest.js",
     "test": "jest --verbose",
     "lint": "eslint .",
