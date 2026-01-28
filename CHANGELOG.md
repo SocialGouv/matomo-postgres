@@ -1,3 +1,13 @@
+## [2.3.4](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.3...v2.3.4) (2026-01-28)
+
+
+### Bug Fixes
+
+* pnpm migration ([#89](https://github.com/SocialGouv/matomo-postgres/issues/89)) ([371f10e](https://github.com/SocialGouv/matomo-postgres/commit/371f10e409723e8244df521cb912eb448b748ec3))
+* race condition in partition creation ([#88](https://github.com/SocialGouv/matomo-postgres/issues/88)) ([7d703de](https://github.com/SocialGouv/matomo-postgres/commit/7d703deca4e6c00a289201d9af109d1c0a208fd5)), closes [hi#concurrency](https://github.com/hi/issues/concurrency)
+* release ([531d32e](https://github.com/SocialGouv/matomo-postgres/commit/531d32eb60ddd380be0acb2ecdb11f2ed6ca1a40))
+* release ([04aa33e](https://github.com/SocialGouv/matomo-postgres/commit/04aa33e5a73ce33f4a0b6ab067918246624b292e))
+
 ## [2.3.3](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.2...v2.3.3) (2025-10-29)
 
 
