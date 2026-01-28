@@ -24,7 +24,8 @@
   "scripts": {
     "start": "pnpm migrate && node ./bin/index.js",
     "build": "tsc",
-    "prepublish": "pnpm build",
+    "prepack": "pnpm build",
+    "prepublishOnly": "pnpm build",
     "migrate": "node ./dist/migrate-latest.js",
     "test": "jest --verbose",
     "lint": "eslint .",
