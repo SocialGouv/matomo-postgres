@@ -53,4 +53,3 @@ jobs:
           GIT_AUTHOR_NAME: ${{ secrets.SOCIALGROOVYBOT_NAME }}
           GIT_COMMITTER_EMAIL: ${{ secrets.SOCIALGROOVYBOT_EMAIL }}
           GIT_COMMITTER_NAME: ${{ secrets.SOCIALGROOVYBOT_NAME }}
-          NPM_TOKEN: ${{ secrets.SOCIALGROOVYBOT_NPM_TOKEN }}
