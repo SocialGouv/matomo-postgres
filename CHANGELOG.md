@@ -1,3 +1,10 @@
+## [2.3.12](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.11...v2.3.12) (2026-01-28)
+
+
+### Bug Fixes
+
+* memory leak ([#91](https://github.com/SocialGouv/matomo-postgres/issues/91)) ([978b30c](https://github.com/SocialGouv/matomo-postgres/commit/978b30ca3ba5af90664ca9a5a1eae9f4175b365f))
+
 ## [2.3.11](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.10...v2.3.11) (2026-01-28)
 
 
