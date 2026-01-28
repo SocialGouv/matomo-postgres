@@ -19,7 +19,6 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          persist-credentials: false
 
       - name: Setup Node
         uses: actions/setup-node@v6
