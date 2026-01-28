@@ -10,6 +10,14 @@ import { getEventsFromMatomoVisit, importEvent } from './importEvent.js'
 
 const debug = startDebug('importDate')
 
+export type ImportDateResult = {
+  /** ISO yyyy-mm-dd */
+  date: string
+  pages: number
+  visitsFetched: number
+  eventsImported: number
+}
+
 /** return date as ISO yyyy-mm-dd */
 const isoDate = (date: Date) => formatISO(date, { representation: 'date' })
 
@@ -37,68 +45,83 @@ export const importDate = async (
   piwikApi: any,
   date: Date,
   filterOffset = 0
-): Promise<any> => {
+): Promise<ImportDateResult> => {
   const limit = parseInt(RESULTPERPAGE)
-  const offset = filterOffset || (await getRecordsCount(isoDate(date)))
-  if (!offset) {
-    debug(`${isoDate(date)}: load ${limit} visits`)
-  } else {
-    debug(`${isoDate(date)}: load ${limit} more visits after ${offset}`)
-  }
 
-  // fetch visits details
-  const visits: Visits = await new Promise((resolve) =>
-    piwikApi(
-      {
-        method: 'Live.getLastVisitsDetails',
-        period: 'day',
-        date: isoDate(date),
-        // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
-        filter_limit: limit,
-        filter_offset: offset,
-        filter_sort_order: 'asc',
-        idSite: MATOMO_SITE
-      },
-      (err: Error, visits: Visit[] = []) => {
-        if (err) {
-          console.error('err', err)
-          resolve([])
+  const dateIso = isoDate(date)
+  let offset = filterOffset || (await getRecordsCount(dateIso))
+
+  let pages = 0
+  let visitsFetched = 0
+  let eventsImported = 0
+
+  while (true) {
+    pages += 1
+    if (!offset) {
+      debug(`${dateIso}: load ${limit} visits`)
+    } else {
+      debug(`${dateIso}: load ${limit} more visits after ${offset}`)
+    }
+
+    // fetch visits details
+    const visits: Visits = await new Promise((resolve) =>
+      piwikApi(
+        {
+          method: 'Live.getLastVisitsDetails',
+          period: 'day',
+          date: dateIso,
+          // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
+          filter_limit: limit,
+          filter_offset: offset,
+          filter_sort_order: 'asc',
+          idSite: MATOMO_SITE
+        },
+        (err: Error, visits: Visit[] = []) => {
+          if (err) {
+            console.error('err', err)
+            resolve([])
+          }
+          return resolve(visits)
         }
-        return resolve(visits)
-      }
+      )
     )
-  )
 
-  debug(`fetched ${visits.length} visits`)
+    visitsFetched += visits.length
+    debug(`fetched ${visits.length} visits`)
 
-  // flatten all events
-  const eventsFromVisits = visits.flatMap(getEventsFromMatomoVisit)
+    // flatten all events
+    const allEvents = visits.flatMap(getEventsFromMatomoVisit)
 
-  const allEvents = eventsFromVisits.filter((_event) => {
-    return true
-  })
+    if (allEvents.length) {
+      debug(`import ${allEvents.length} events`)
 
-  if (!allEvents.length) {
-    debug(`no more valid events after ${isoDate(date)}`)
-    return []
+      // import events into PG
+      await pAll(
+        allEvents.map((event: any) => () => importEvent(event)),
+        { concurrency: 10, stopOnError: true }
+      )
+
+      eventsImported += allEvents.length
+    } else {
+      debug(`no events to import on this page (${dateIso}, offset ${offset})`)
+    }
+
+    // stop if we didn't fetch a full page
+    if (visits.length < limit) {
+      break
+    }
+
+    offset += limit
   }
 
-  debug(`import ${allEvents.length} events`)
-
-  // serial-import events into PG
-  await pAll(
-    allEvents.map((event: any) => () => importEvent(event)),
-    { concurrency: 10, stopOnError: true }
+  debug(
+    `finished importing ${dateIso}, pages ${pages}, visits ${visitsFetched}`
   )
 
-  // continue to next page if necessary
-  if (visits.length === limit) {
-    const nextOffset = offset + limit
-    const nextEvents = await importDate(piwikApi, date, nextOffset)
-    return [...allEvents, ...(nextEvents || [])]
+  return {
+    date: dateIso,
+    pages,
+    visitsFetched,
+    eventsImported
   }
-
-  debug(`finished importing ${isoDate(date)}, offset ${offset}`)
-
-  return allEvents
 }

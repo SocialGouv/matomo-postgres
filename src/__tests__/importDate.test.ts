@@ -61,7 +61,7 @@ test('importDate: should import given date', async () => {
 
   pool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 })
 
-  await importDate(piwikApi, TEST_DATE)
+  const result = await importDate(piwikApi, TEST_DATE)
 
   expect(piwikApi.mock.calls.length).toEqual(1)
 
@@ -85,6 +85,13 @@ test('importDate: should import given date', async () => {
 ]
 `)
   expect(queries.length).toEqual(1 + matomoVisit.actionDetails.length * 2)
+
+  expect(result).toMatchObject({
+    date: '2023-04-15',
+    pages: 1,
+    visitsFetched: 2,
+    eventsImported: matomoVisit.actionDetails.length * 2
+  })
 })
 
 test('importDate: should handle pagination across multiple pages', async () => {
@@ -140,7 +147,12 @@ test('importDate: should handle pagination across multiple pages', async () => {
 
   // Should process all events from both pages
   // 15 visits total × 3 actionDetails each = 45 events
-  expect(result.length).toEqual(45)
+  expect(result).toMatchObject({
+    date: '2023-04-15',
+    pages: 2,
+    visitsFetched: 15,
+    eventsImported: 45
+  })
 
   // Verify database queries: 1 count query + (45 events × 1 query per event)
   // Note: Each event generates 1 database query for insertion
