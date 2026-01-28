@@ -47,9 +47,19 @@ export const importDate = async (
   filterOffset = 0
 ): Promise<ImportDateResult> => {
   const limit = parseInt(RESULTPERPAGE)
+  // Guard against misconfiguration that can cause infinite pagination loops
+  // (e.g. limit=NaN makes `visits.length < limit` always false).
+  if (!Number.isFinite(limit) || limit <= 0) {
+    throw new Error(
+      `Invalid RESULTPERPAGE: expected a positive integer, got '${RESULTPERPAGE}'`
+    )
+  }
 
   const dateIso = isoDate(date)
   let offset = filterOffset || (await getRecordsCount(dateIso))
+  if (!Number.isFinite(offset) || offset < 0) {
+    offset = 0
+  }
 
   let pages = 0
   let visitsFetched = 0
@@ -64,7 +74,7 @@ export const importDate = async (
     }
 
     // fetch visits details
-    const visits: Visits = await new Promise((resolve) =>
+    const visits: Visits = await new Promise((resolve, reject) =>
       piwikApi(
         {
           method: 'Live.getLastVisitsDetails',
@@ -78,8 +88,7 @@ export const importDate = async (
         },
         (err: Error, visits: Visit[] = []) => {
           if (err) {
-            console.error('err', err)
-            resolve([])
+            return reject(err)
           }
           return resolve(visits)
         }
