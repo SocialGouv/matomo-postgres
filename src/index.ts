@@ -1,7 +1,6 @@
-import { eachDayOfInterval } from 'date-fns'
+import { addDays } from 'date-fns'
 import startDebug from 'debug'
 import { Kysely, sql } from 'kysely'
-import pAll from 'p-all'
 
 import {
   DESTINATION_TABLE,
@@ -82,40 +81,46 @@ async function run(date?: string) {
   }
 
   const endDate = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
-  const dates = eachDayOfInterval({
-    start: referenceDate,
-    end: endDate
-  })
 
   console.log(`📊 Import date range determined:`)
-  console.log(`  - Start date: ${dates[0].toISOString()}`)
+  console.log(`  - Start date: ${referenceDate.toISOString()}`)
   console.log(`  - End date: ${endDate.toISOString()}`)
-  console.log(`  - Total days to process: ${dates.length}`)
 
-  debug(`import starting at : ${dates[0].toISOString()}`)
+  debug(`import starting at : ${referenceDate.toISOString()}`)
 
   console.log(`🔄 Starting sequential import for each date...`)
 
-  // for each date, serial-import data
-  const res = await pAll(
-    dates.map((date, index) => () => {
-      console.log(
-        `📅 Processing date ${index + 1}/${dates.length}: ${date.toISOString().split('T')[0]}`
-      )
-      return importDate(piwik.api.bind(piwik), date)
-    }),
-    { concurrency: 1, stopOnError: true }
-  )
+  let daysProcessed = 0
+  let totalEventsImported = 0
 
-  const totalEvents = res.flat().length
+  for (
+    let current = new Date(referenceDate);
+    current <= endDate;
+    current = addDays(current, 1)
+  ) {
+    daysProcessed += 1
+    const dayIso = current.toISOString().split('T')[0]
+    console.log(`📅 Processing day ${daysProcessed}: ${dayIso}`)
+
+    const result = await importDate(piwik.api.bind(piwik), current)
+    totalEventsImported += result.eventsImported
+
+    console.log(
+      `✅ Finished ${dayIso}: pages=${result.pages} visits=${result.visitsFetched} events=${result.eventsImported}`
+    )
+  }
+
   console.log(`✅ Import process completed`)
   console.log(`📈 Summary:`)
-  console.log(`  - Days processed: ${dates.length}`)
-  console.log(`  - Total events imported: ${totalEvents}`)
+  console.log(`  - Days processed: ${daysProcessed}`)
+  console.log(`  - Total events imported: ${totalEventsImported}`)
 
   debug('close')
 
-  return res
+  return {
+    daysProcessed,
+    eventsImportedTotal: totalEventsImported
+  }
 }
 
 async function findLastEventInMatomo(db: Kysely<Database>) {

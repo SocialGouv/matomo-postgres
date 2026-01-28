@@ -10,6 +10,14 @@ import { getEventsFromMatomoVisit, importEvent } from './importEvent.js'
 
 const debug = startDebug('importDate')
 
+export type ImportDateResult = {
+  /** ISO yyyy-mm-dd */
+  date: string
+  pages: number
+  visitsFetched: number
+  eventsImported: number
+}
+
 /** return date as ISO yyyy-mm-dd */
 const isoDate = (date: Date) => formatISO(date, { representation: 'date' })
 
@@ -37,68 +45,92 @@ export const importDate = async (
   piwikApi: any,
   date: Date,
   filterOffset = 0
-): Promise<any> => {
+): Promise<ImportDateResult> => {
   const limit = parseInt(RESULTPERPAGE)
-  const offset = filterOffset || (await getRecordsCount(isoDate(date)))
-  if (!offset) {
-    debug(`${isoDate(date)}: load ${limit} visits`)
-  } else {
-    debug(`${isoDate(date)}: load ${limit} more visits after ${offset}`)
-  }
-
-  // fetch visits details
-  const visits: Visits = await new Promise((resolve) =>
-    piwikApi(
-      {
-        method: 'Live.getLastVisitsDetails',
-        period: 'day',
-        date: isoDate(date),
-        // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
-        filter_limit: limit,
-        filter_offset: offset,
-        filter_sort_order: 'asc',
-        idSite: MATOMO_SITE
-      },
-      (err: Error, visits: Visit[] = []) => {
-        if (err) {
-          console.error('err', err)
-          resolve([])
-        }
-        return resolve(visits)
-      }
+  // Guard against misconfiguration that can cause infinite pagination loops
+  // (e.g. limit=NaN makes `visits.length < limit` always false).
+  if (!Number.isFinite(limit) || limit <= 0) {
+    throw new Error(
+      `Invalid RESULTPERPAGE: expected a positive integer, got '${RESULTPERPAGE}'`
     )
-  )
-
-  debug(`fetched ${visits.length} visits`)
-
-  // flatten all events
-  const eventsFromVisits = visits.flatMap(getEventsFromMatomoVisit)
-
-  const allEvents = eventsFromVisits.filter((_event) => {
-    return true
-  })
-
-  if (!allEvents.length) {
-    debug(`no more valid events after ${isoDate(date)}`)
-    return []
   }
 
-  debug(`import ${allEvents.length} events`)
-
-  // serial-import events into PG
-  await pAll(
-    allEvents.map((event: any) => () => importEvent(event)),
-    { concurrency: 10, stopOnError: true }
-  )
-
-  // continue to next page if necessary
-  if (visits.length === limit) {
-    const nextOffset = offset + limit
-    const nextEvents = await importDate(piwikApi, date, nextOffset)
-    return [...allEvents, ...(nextEvents || [])]
+  const dateIso = isoDate(date)
+  let offset = filterOffset || (await getRecordsCount(dateIso))
+  if (!Number.isFinite(offset) || offset < 0) {
+    offset = 0
   }
 
-  debug(`finished importing ${isoDate(date)}, offset ${offset}`)
+  let pages = 0
+  let visitsFetched = 0
+  let eventsImported = 0
 
-  return allEvents
+  while (true) {
+    pages += 1
+    if (!offset) {
+      debug(`${dateIso}: load ${limit} visits`)
+    } else {
+      debug(`${dateIso}: load ${limit} more visits after ${offset}`)
+    }
+
+    // fetch visits details
+    const visits: Visits = await new Promise((resolve, reject) =>
+      piwikApi(
+        {
+          method: 'Live.getLastVisitsDetails',
+          period: 'day',
+          date: dateIso,
+          // minTimestamp: isoDate(new Date()) === isoDate(date) ? date.getTime() / 1000 : undefined, // if today, dont go further (??)
+          filter_limit: limit,
+          filter_offset: offset,
+          filter_sort_order: 'asc',
+          idSite: MATOMO_SITE
+        },
+        (err: Error, visits: Visit[] = []) => {
+          if (err) {
+            return reject(err)
+          }
+          return resolve(visits)
+        }
+      )
+    )
+
+    visitsFetched += visits.length
+    debug(`fetched ${visits.length} visits`)
+
+    // flatten all events
+    const allEvents = visits.flatMap(getEventsFromMatomoVisit)
+
+    if (allEvents.length) {
+      debug(`import ${allEvents.length} events`)
+
+      // import events into PG
+      await pAll(
+        allEvents.map((event: any) => () => importEvent(event)),
+        { concurrency: 10, stopOnError: true }
+      )
+
+      eventsImported += allEvents.length
+    } else {
+      debug(`no events to import on this page (${dateIso}, offset ${offset})`)
+    }
+
+    // stop if we didn't fetch a full page
+    if (visits.length < limit) {
+      break
+    }
+
+    offset += limit
+  }
+
+  debug(
+    `finished importing ${dateIso}, pages ${pages}, visits ${visitsFetched}`
+  )
+
+  return {
+    date: dateIso,
+    pages,
+    visitsFetched,
+    eventsImported
+  }
 }
