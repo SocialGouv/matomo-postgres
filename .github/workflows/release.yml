@@ -42,6 +42,7 @@ jobs:
           audience: socialgouv
 
       - name: Semantic Release
+        id: semantic
         uses: cycjimmy/semantic-release-action@ba330626c4750c19d8299de843f05c7aa5574f62
         with:
           semantic_version: 25.0.1
@@ -54,3 +55,7 @@ jobs:
           GIT_AUTHOR_NAME: ${{ secrets.SOCIALGROOVYBOT_NAME }}
           GIT_COMMITTER_EMAIL: ${{ secrets.SOCIALGROOVYBOT_EMAIL }}
           GIT_COMMITTER_NAME: ${{ secrets.SOCIALGROOVYBOT_NAME }}
+      
+      - name: Publish to NPM
+        if: ${{ steps.semantic.outputs.new_release_published == 'true' }}
+        run: npm publish
