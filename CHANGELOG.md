@@ -1,3 +1,10 @@
+## [2.3.13](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.12...v2.3.13) (2026-01-28)
+
+
+### Bug Fixes
+
+* release dist ([24f356f](https://github.com/SocialGouv/matomo-postgres/commit/24f356fe553afbfac7de71bc82242e6d4464f450))
+
 ## [2.3.12](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.11...v2.3.12) (2026-01-28)
 
 
