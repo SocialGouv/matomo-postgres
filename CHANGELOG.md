@@ -1,3 +1,10 @@
+## [2.3.14](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.13...v2.3.14) (2026-01-29)
+
+
+### Bug Fixes
+
+* Import into non-partioned table ([0912909](https://github.com/SocialGouv/matomo-postgres/commit/091290933a8cf13df532b61b19d56b89dfddd710))
+
 ## [2.3.13](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.12...v2.3.13) (2026-01-28)
 
 
