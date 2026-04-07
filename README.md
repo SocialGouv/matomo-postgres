@@ -213,6 +213,14 @@ Migrations run automatically on each `pnpm start` to ensure schema compatibility
    - Parallel event insertion (configurable)
    - Automatic pagination for large datasets
 
+## ⚠️ Limitations
+
+### Actions per visit cap
+
+The Matomo `Live.getLastVisitsDetails` API limits the number of actions returned per visit to **99**.
+If a user performed more than **99** actions during a visit, the extra actions will be missing from the database (see [issue #92](https://github.com/SocialGouv/matomo-postgres/issues/92)).
+This limitation comes from Matomo’s API itself; this library does not implement any per-action workaround.
+
 ## 🐛 Troubleshooting
 
 ### Common Issues
