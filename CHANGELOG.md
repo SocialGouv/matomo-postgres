@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.14...v2.4.0) (2026-04-21)
+
+
+### Features
+
+* add A/B Testing data (experiments) ([#94](https://github.com/SocialGouv/matomo-postgres/issues/94)) ([1d10b91](https://github.com/SocialGouv/matomo-postgres/commit/1d10b91e5914fe046dfb7e378ece68e2c675c175))
+
 ## [2.3.14](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.13...v2.3.14) (2026-01-29)
 
 
