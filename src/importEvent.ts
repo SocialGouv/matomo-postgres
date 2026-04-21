@@ -243,7 +243,7 @@ export const getEventsFromMatomoVisit = (
         (a, prop) => ({ ...a, [prop.toLowerCase()]: matomoVisit[prop] }),
         {}
       ),
-      experiments: JSON.stringify(matomoVisit.experiments),
+      experiments: matomoVisit.experiments ?? null,
       serverdateprettyfirstaction: new Date(
         (matomoVisit.firstActionTimestamp || 0) * 1000
       ).toISOString(),
@@ -294,5 +294,5 @@ type AllMatomoActionDetailKeys =
 type MatomoActionDetail = Partial<
   Record<AllMatomoActionDetailKeys, string> & { usercustomproperties: any } & {
     usercustomdimensions: any
-  }
+  } & { experiments: any }
 >

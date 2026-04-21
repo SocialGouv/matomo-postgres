@@ -17,6 +17,16 @@
   "region": "Buenos Aires",
   "city": "Buenos Aires",
   "resolution": "1920x1080",
+  "experiments": [
+    {
+      "idexperiment": "3",
+      "name": "search_ab_test",
+      "variation": {
+        "idvariation": 5,
+        "name": "search_v2"
+      }
+    }
+  ],
   "dimension1": "guest",
   "dimension3": "page",
   "dimension6": "shop",
