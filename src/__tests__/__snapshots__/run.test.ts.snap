@@ -181,16 +181,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -298,16 +289,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -415,16 +397,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -535,16 +508,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -652,16 +616,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -769,16 +724,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -895,16 +841,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1012,16 +949,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1129,16 +1057,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1249,16 +1168,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1366,16 +1276,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1483,16 +1384,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1609,16 +1501,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1726,16 +1609,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1843,16 +1717,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -1963,16 +1828,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2080,16 +1936,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2197,16 +2044,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2323,16 +2161,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2440,16 +2269,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2557,16 +2377,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2677,16 +2488,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2794,16 +2596,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -2911,16 +2704,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -3037,16 +2821,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -3154,16 +2929,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -3271,16 +3037,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -3391,16 +3148,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -3508,16 +3256,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
   [
@@ -3625,16 +3364,7 @@ exports[`run: should run SQL queries 1`] = `
       "referrerType",
       "referrerName",
       "1920x1080",
-      [
-        {
-          "idexperiment": "3",
-          "name": "search_ab_test",
-          "variation": {
-            "idvariation": 5,
-            "name": "search_v2",
-          },
-        },
-      ],
+      "[{"idexperiment":"3","name":"search_ab_test","variation":{"idvariation":5,"name":"search_v2"}}]",
     ],
   ],
 ]

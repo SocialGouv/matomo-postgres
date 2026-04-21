@@ -113,7 +113,8 @@ export const importEvent = async (event: MatomoActionDetail): Promise<void> => {
     referrertype: event.referrertype ?? null,
     referrername: event.referrername ?? null,
     resolution: event.resolution ?? null,
-    experiments: event.experiments ?? null
+    experiments:
+      event.experiments != null ? JSON.stringify(event.experiments) : null
   }
 
   // Minimal runtime validation for required fields
