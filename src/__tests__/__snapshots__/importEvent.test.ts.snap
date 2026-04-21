@@ -29,6 +29,16 @@ exports[`getEventsFromMatomoVisit: should merge action events 1`] = `
     "dimension7": "v1.2.3",
     "dimension8": "fr",
     "dimension9": "light",
+    "experiments": [
+      {
+        "idexperiment": "3",
+        "name": "search_ab_test",
+        "variation": {
+          "idvariation": 5,
+          "name": "search_v2",
+        },
+      },
+    ],
     "idsite": "42",
     "idvisit": "124",
     "operatingsystemname": "Mac",
@@ -87,6 +97,16 @@ exports[`getEventsFromMatomoVisit: should merge action events 1`] = `
     "dimension7": "v1.2.3",
     "dimension8": "fr",
     "dimension9": "light",
+    "experiments": [
+      {
+        "idexperiment": "3",
+        "name": "search_ab_test",
+        "variation": {
+          "idvariation": 5,
+          "name": "search_v2",
+        },
+      },
+    ],
     "idsite": "42",
     "idvisit": "124",
     "operatingsystemname": "Mac",
@@ -142,6 +162,16 @@ exports[`getEventsFromMatomoVisit: should merge action events 1`] = `
     "dimension7": "v1.2.3",
     "dimension8": "fr",
     "dimension9": "light",
+    "experiments": [
+      {
+        "idexperiment": "3",
+        "name": "search_ab_test",
+        "variation": {
+          "idvariation": 5,
+          "name": "search_v2",
+        },
+      },
+    ],
     "idsite": "42",
     "idvisit": "124",
     "operatingsystemname": "Mac",

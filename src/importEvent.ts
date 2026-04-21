@@ -46,7 +46,8 @@ const MATOMO_INSERT_COLUMNS = [
   'visitorid',
   'referrertype',
   'referrername',
-  'resolution'
+  'resolution',
+  'experiments'
 ] as const
 
 const MATOMO_INSERT_COLUMN_SQL = sql.join(
@@ -111,7 +112,8 @@ export const importEvent = async (event: MatomoActionDetail): Promise<void> => {
     visitorid: event.visitorid ?? null,
     referrertype: event.referrertype ?? null,
     referrername: event.referrername ?? null,
-    resolution: event.resolution ?? null
+    resolution: event.resolution ?? null,
+    experiments: event.experiments ?? null
   }
 
   // Minimal runtime validation for required fields
@@ -241,6 +243,7 @@ export const getEventsFromMatomoVisit = (
         (a, prop) => ({ ...a, [prop.toLowerCase()]: matomoVisit[prop] }),
         {}
       ),
+      experiments: matomoVisit.experiments ?? null,
       serverdateprettyfirstaction: new Date(
         (matomoVisit.firstActionTimestamp || 0) * 1000
       ).toISOString(),
@@ -286,9 +289,10 @@ type AllMatomoActionDetailKeys =
   | 'usercustomproperties'
   | 'usercustomdimensions'
   | 'serverdateprettyfirstaction'
+  | 'experiments'
 
 type MatomoActionDetail = Partial<
   Record<AllMatomoActionDetailKeys, string> & { usercustomproperties: any } & {
     usercustomdimensions: any
-  }
+  } & { experiments: any }
 >
