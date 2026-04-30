@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/SocialGouv/matomo-postgres/compare/v2.4.0...v2.4.1) (2026-04-30)
+
+
+### Bug Fixes
+
+* serialize JSON fields with JSON.stringify to prevent invalid JSON syntax error ([3ae9f7e](https://github.com/SocialGouv/matomo-postgres/commit/3ae9f7e1bb828035e224d6c82a292294ee412f87))
+
 # [2.4.0](https://github.com/SocialGouv/matomo-postgres/compare/v2.3.14...v2.4.0) (2026-04-21)
 
 
