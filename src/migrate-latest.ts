@@ -4,6 +4,7 @@ import * as path from 'path'
 
 import { MATOMO_TABLE_NAME } from './config.js'
 import { db } from './db.js'
+import { syncDestinationTableSchema } from './syncDestinationTableSchema.js'
 
 async function migrateToLatest() {
   console.log(`Starting migrate to latest`)
@@ -40,6 +41,8 @@ async function migrateToLatest() {
     } else if (!results?.length) {
       console.log('No migration to run')
     }
+
+    await syncDestinationTableSchema(db)
   } catch (uncaughtError) {
     console.error('UNCAUGHT ERROR during migration:')
     console.error(
