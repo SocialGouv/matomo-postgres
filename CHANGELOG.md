@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/SocialGouv/matomo-postgres/compare/v2.4.1...v2.4.2) (2026-05-26)
+
+
+### Bug Fixes
+
+* declare engines.node >=18 so npx fails fast on EOL Node ([ccc9f5c](https://github.com/SocialGouv/matomo-postgres/commit/ccc9f5c405647409ee6895c28facf6f92d8e80e8))
+
 ## [2.4.1](https://github.com/SocialGouv/matomo-postgres/compare/v2.4.0...v2.4.1) (2026-04-30)
 
 
