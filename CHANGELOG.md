@@ -1,3 +1,10 @@
+## [2.4.3](https://github.com/SocialGouv/matomo-postgres/compare/v2.4.2...v2.4.3) (2026-05-26)
+
+
+### Bug Fixes
+
+* re-apply partition race-condition guard via new migration ([910ded4](https://github.com/SocialGouv/matomo-postgres/commit/910ded49feae6e992eb986fb362c34afbe07c739))
+
 ## [2.4.2](https://github.com/SocialGouv/matomo-postgres/compare/v2.4.1...v2.4.2) (2026-05-26)
 
 
